@@ -13,8 +13,6 @@
 
 import {Command} from 'commander';
 
-console.log('\nUse .skeletest.json config file to override default settings.\n');
-
 const commander: any = new Command();
 const packageJson = require('../package.json');
 
@@ -25,6 +23,9 @@ commander
 	.option('-c, --config <config>', 'Alternative config file (must be .json)', '.skeletest.json')
 	.parse(process.argv);
 
+const options = commander.opts();
+if (!options?.help) console.log('\nUse .skeletest.json config file to override default settings.\n');
+
 import skeleton from './skeleton';
 
-skeleton.run(commander.opts());
+skeleton.run(options);
