@@ -1,7 +1,6 @@
 {
 	"srcFolderName": "src",
-	"srcFilesExtension": "ts",
+	"filesExtension": "ts",
 	"testFolderName": "test",
-	"testFilesExtension": "ts",
 	"testFileExtensionPrefix": "spec"
 }

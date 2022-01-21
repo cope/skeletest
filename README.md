@@ -1,2 +1,2 @@
 # skeletest
-test skeleton
+test skeleton creator

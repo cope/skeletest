@@ -17,9 +17,8 @@ const _hasJS = (srcFolder: string) => {
 const _getDefaultConfig = (root: string) => {
 	const defaultConfig = {
 		srcFolderName: 'src',
-		srcFilesExtension: 'ts',
+		filesExtension: 'ts',
 		testFolderName: 'test',
-		testFilesExtension: 'ts',
 		testFileExtensionPrefix: 'spec'
 	};
 
@@ -29,8 +28,7 @@ const _getDefaultConfig = (root: string) => {
 		const srcFolder = path.join(root, 'src');
 		if (fs.lstatSync(srcFolder).isDirectory()) {
 			if (_hasJS(srcFolder)) {
-				set(config, 'srcFilesExtension', 'js');
-				set(config, 'testFilesExtension', 'js');
+				set(config, 'filesExtension', 'js');
 				set(config, 'testFileExtensionPrefix', 'test');
 			}
 		}

@@ -1,7 +1,7 @@
 {
 	"name": "skeletest",
-	"version": "0.0.1",
-	"description": "test skeleton",
+	"version": "0.1.0",
+	"description": "test skeleton creator",
 	"engines": {
 		"node": ">=12.0.0"
 	},
@@ -12,14 +12,15 @@
 		"build": "del /S /Q lib\\* && tsc",
 		"build:watch": "tsc --watch",
 		"lint": "tslint -p tsconfig.json",
-		"clean": "tslint --config tslint-imports.json --fix --project .",
-		"format": "prettier --write \"src/**/*.ts\"",
 		"docs": "typedoc --readme none --out docs src",
 		"test": "nyc mocha -r ts-node/register test/**/*.spec.ts",
-		"coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls",
-		"sonar": "sonarjs -e .sonarlint/**,node_modules/**,coverage/**,.nyc_output/**",
-		"latest-interactive": "yarn upgrade-interactive --latest",
-		"latest": "yarn upgrade --latest"
+		"clean": "tslint --config tslint-imports.json --fix --project .",
+		"imports": "tslint --project tsconfig.json --config tslint-imports.json",
+		"fiximports": "tslint --project tsconfig.json --config tslint-imports.json --fix --project",
+		"format": "prettier --write \"src/**/*.ts\"",
+		"up": "yarn upgrade-interactive",
+		"upgrade": "yarn upgrade --latest",
+		"latest": "yarn upgrade-interactive --latest"
 	},
 	"files": [
 		"lib/**/*"
@@ -48,6 +49,8 @@
 	"author": "Predrag Stojadinovic <Predrag@Stojadinovic.net>",
 	"license": "MIT",
 	"dependencies": {
+		"@types/cli-table": "^0.3.0",
+		"cli-table": "^0.3.11",
 		"commander": "^8.3.0",
 		"lodash": "^4.17.21"
 	},
