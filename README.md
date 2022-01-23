@@ -4,7 +4,26 @@ test skeleton creator
 
 ## todo
 
-- add "ignoreFiles" option in .skeletest.json
+- add "ignoreSrcFiles" option in .skeletest.json
+- add "ignoreTestFiles" option in .skeletest.json
+
+## optional config
+
+You can change default configuration via ```.skeletest.json``` file:
+
+```
+{
+	"srcFolderName": "src",                 // default: "src"
+	"filesExtension": "ts",                 // default detects: "ts" for typescript and "js" for javascript
+	"testFolderName": "test",               // default: "test"
+	"testFileExtensionPrefix": "spec",      // default detects: "spec" for typescript and "test" for javascript
+
+	"useTestTodo": true,                    // default: false - if true, skeletest uses jests "it.todo"
+
+	"ignoreSrcFiles": ["file1.ts"...],      // not yet implemented - default: []
+	"ignoreTestFiles": ["file3.spec.ts"...] // not yet implemented - default: []
+}
+```
 
 ## help
 
@@ -148,3 +167,9 @@ Files I could NOT move:
 │ 2 │ check.folder.spec.ts │ C:\git\github\skeletest\test     │ C:\git\github\skeletest\test\functions │
 └───┴──────────────────────┴──────────────────────────────────┴────────────────────────────────────────┘
 ```
+
+## skeletest generated file
+
+For a given file, eg. ```check.folder.ts```, skeletest will generate a ```check.folder.spec.ts``` file, with the following content:
+
+```describe('check.folder.ts tests', () => it('should be implemented'));```

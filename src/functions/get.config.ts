@@ -19,7 +19,10 @@ const _getDefaultConfig = (root: string) => {
 		srcFolderName: 'src',
 		filesExtension: 'ts',
 		testFolderName: 'test',
-		testFileExtensionPrefix: 'spec'
+		testFileExtensionPrefix: 'spec',
+		ignoreSrcFiles: [],
+		ignoreTestFiles: [],
+		useTestTodo: false
 	};
 
 	try {
@@ -40,10 +43,12 @@ const _getDefaultConfig = (root: string) => {
 };
 
 const getConfig = (root: string, configFile: string) => {
+	const defaultConfig = _getDefaultConfig(root);
 	try {
-		return require(path.join(root, configFile));
+		const userConfig = require(path.join(root, configFile));
+		return {...defaultConfig, ...userConfig};
 	} catch (error) {
-		return _getDefaultConfig(root);
+		return defaultConfig;
 	}
 };
 

@@ -12,6 +12,7 @@ import fixExtension from './functions/fix.extension';
 import getFilesListing from './functions/get.files.listing';
 import convertFilesToObjects from './functions/convert.files.to.objects';
 import getTableFromFileObjects from './functions/get.table.from.file.objects';
+import getSkeletestFileContent from './functions/get.skeletest.file.content';
 
 export default {
 	run(commander: any) {
@@ -20,7 +21,7 @@ export default {
 		const root = process.cwd();
 		const config = getConfig(root, options?.config);
 
-		const {srcFolderName, testFolderName} = config;
+		const {srcFolderName, testFolderName, ignoreSrcFiles = [], ignoreTestFiles = [], useTestTodo = false} = config;
 		let {filesExtension, testFileExtensionPrefix} = config;
 		filesExtension = fixExtension(filesExtension);
 		testFileExtensionPrefix = fixExtension(testFileExtensionPrefix);
@@ -86,10 +87,10 @@ export default {
 			if (!_.isEmpty(missingTestFiles)) {
 				console.log('\nCreating files...');
 				_.each(missingTestFiles, (file) => {
-					if (!fs.existsSync(file)) {
-						const fullPath = path.join(file.path, file.name);
+					const fullPath = path.join(file.path, file.name);
+					if (!fs.existsSync(fullPath)) {
 						console.log(' - Creating', fullPath, '...');
-						fs.writeFileSync(fullPath, `'use strict';\ndescribe('${file.name} tests', () => it('should be implemented'));`);
+						fs.writeFileSync(fullPath, getSkeletestFileContent(useTestTodo, file.name));
 					}
 				});
 				console.log('Done.');
