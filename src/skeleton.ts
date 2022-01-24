@@ -90,7 +90,7 @@ export default {
 					const fullPath = path.join(file.path, file.name);
 					if (!fs.existsSync(fullPath)) {
 						console.log(' - Creating', fullPath, '...');
-						fs.writeFileSync(fullPath, getSkeletestFileContent(useTestTodo, file.name));
+						fs.writeFileSync(fullPath, getSkeletestFileContent(useTestTodo, file.name, testFileExtensionPrefix));
 					}
 				});
 				console.log('Done.');
