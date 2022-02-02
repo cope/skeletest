@@ -26,6 +26,6 @@ commander
 const options = commander.opts();
 if (!options?.help) console.log('\nUse .skeletest.json config file to override default settings.\n');
 
-import skeleton from './skeleton';
+import skeletor from './skeletor';
 
-skeleton.run(options);
+skeletor.run(options);

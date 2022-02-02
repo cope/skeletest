@@ -4,6 +4,10 @@
 	"testFolderName": "test",
 	"testFileExtensionPrefix": "spec",
 	"useTestTodo": false,
-	"ignoreSrcFiles": [],
-	"ignoreTestFiles": []
+	"ignoreSrcFiles": [
+		"test/skeletest.spec.ts"
+	],
+	"ignoreTestFiles": [
+		"test/wrong.ts"
+	]
 }

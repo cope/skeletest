@@ -1,12 +1,12 @@
 {
 	"name": "skeletest",
-	"version": "0.1.4",
+	"version": "0.1.5",
 	"description": "test skeleton creator",
 	"engines": {
 		"node": ">=12.0.0"
 	},
-	"main": "./lib/index.js",
-	"types": "./lib/index.d.ts",
+	"main": "./lib/skeletest.js",
+	"types": "./lib/skeletest.d.ts",
 	"scripts": {
 		"all": "yarn & tsc & yarn clean & yarn format & yarn build & yarn test & yarn docs",
 		"build": "del /S /Q lib\\* && tsc",
@@ -24,7 +24,7 @@
 	},
 	"preferGlobal": true,
 	"bin": {
-		"skeletest": "./lib/index.js"
+		"skeletest": "./lib/skeletest.js"
 	},
 	"files": [
 		"lib/**/*"

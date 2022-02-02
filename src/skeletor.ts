@@ -21,8 +21,8 @@ export default {
 		const root = process.cwd();
 		const config = getConfig(root, options?.config);
 
-		const {srcFolderName, testFolderName, ignoreSrcFiles = [], ignoreTestFiles = [], useTestTodo = false} = config;
-		let {filesExtension, testFileExtensionPrefix} = config;
+		const {srcFolderName, testFolderName, useTestTodo = false} = config;
+		let {filesExtension, testFileExtensionPrefix, ignoreSrcFiles = [], ignoreTestFiles = []} = config;
 		filesExtension = fixExtension(filesExtension);
 		testFileExtensionPrefix = fixExtension(testFileExtensionPrefix);
 
@@ -32,17 +32,32 @@ export default {
 		const testFolder = path.join(root, testFolderName);
 		checkFolder(testFolder, 'Test');
 
-		const srcFiles = getFilesListing(srcFolder, filesExtension);
-		const testFiles = getFilesListing(testFolder, filesExtension);
-		const expectedTestFiles = _.map(srcFiles, (file) => file.replace(srcFolder, testFolder).replace(filesExtension, testFileExtensionPrefix + filesExtension));
+		let srcFiles = getFilesListing(srcFolder, filesExtension);
+		let testFiles = getFilesListing(testFolder, filesExtension);
 
+		ignoreSrcFiles = _.map(ignoreSrcFiles, (f) => path.join(root, f));
+		ignoreTestFiles = _.map(ignoreTestFiles, (f) => path.join(root, f));
+
+		srcFiles = _.filter(srcFiles, (f) => !_.includes(ignoreSrcFiles, f));
+		testFiles = _.filter(testFiles, (f) => !_.includes(ignoreTestFiles, f));
+
+		const expectedTestFiles = _.map(srcFiles, (file) => file.replace(srcFolder, testFolder).replace(filesExtension, testFileExtensionPrefix + filesExtension));
 		const wrongTestFiles = convertFilesToObjects(_.difference(testFiles, expectedTestFiles));
 		const missingTestFiles = convertFilesToObjects(_.difference(expectedTestFiles, testFiles));
-		const expectedTestFileObjects = convertFilesToObjects(expectedTestFiles);
+
+		if (!_.isEmpty(ignoreTestFiles)) {
+			console.log('\nIgnoring test files:');
+			console.log(getTableFromFileObjects(convertFilesToObjects(ignoreTestFiles)).toString());
+		}
 
 		if (!_.isEmpty(wrongTestFiles)) {
 			console.log('\nWrong test files:');
 			console.log(getTableFromFileObjects(wrongTestFiles).toString());
+		}
+
+		if (!_.isEmpty(ignoreSrcFiles)) {
+			console.log('\nIgnoring source files:');
+			console.log(getTableFromFileObjects(convertFilesToObjects(ignoreSrcFiles)).toString());
 		}
 
 		if (!_.isEmpty(missingTestFiles)) {
@@ -53,8 +68,9 @@ export default {
 		if (options?.fix) {
 			console.log('\nFix is set to true. Fixing what I can...\n');
 
-			const filesNotToMove: any[] = [];
 			const filesToMove: any[] = [];
+			const filesNotToMove: any[] = [];
+			const expectedTestFileObjects = convertFilesToObjects(expectedTestFiles);
 			_.each(expectedTestFileObjects, (m) => {
 				let matches = _.filter(wrongTestFiles, (w) => w.name === m.name);
 				matches = _.map(matches, (match) => ({...match, newPath: m.path}));

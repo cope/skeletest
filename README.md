@@ -2,11 +2,6 @@
 
 test skeleton creator
 
-## todo
-
-- add "ignoreSrcFiles" option in .skeletest.json
-- add "ignoreTestFiles" option in .skeletest.json
-
 ## optional config
 
 You can change default configuration via ```.skeletest.json``` file:
@@ -81,8 +76,8 @@ Missing test files:
 │ 6  │ get.table.from.file.objects.spec.ts │ C:\git\github\skeletest\test\functions │
 │ 7  │ get.table.of.files.spec.ts          │ C:\git\github\skeletest\test\functions │
 │ 8  │ get.timestamp.spec.ts               │ C:\git\github\skeletest\test\functions │
-│ 9  │ index.spec.ts                       │ C:\git\github\skeletest\test           │
-│ 10 │ skeleton.spec.ts                    │ C:\git\github\skeletest\test           │
+│ 9  │ skeletest.spec.ts                   │ C:\git\github\skeletest\test           │
+│ 10 │ process.spec.ts                     │ C:\git\github\skeletest\test           │
 └────┴─────────────────────────────────────┴────────────────────────────────────────┘
 ```
 
@@ -123,8 +118,8 @@ Missing test files:
 │ 6  │ get.table.from.file.objects.spec.ts │ C:\git\github\skeletest\test\functions │
 │ 7  │ get.table.of.files.spec.ts          │ C:\git\github\skeletest\test\functions │
 │ 8  │ get.timestamp.spec.ts               │ C:\git\github\skeletest\test\functions │
-│ 9  │ index.spec.ts                       │ C:\git\github\skeletest\test           │
-│ 10 │ skeleton.spec.ts                    │ C:\git\github\skeletest\test           │
+│ 9  │ skeletest.spec.ts                   │ C:\git\github\skeletest\test           │
+│ 10 │ process.spec.ts                     │ C:\git\github\skeletest\test           │
 └────┴─────────────────────────────────────┴────────────────────────────────────────┘
 
 Fix is set to true. Fixing what I can...
@@ -155,8 +150,8 @@ Creating files...
  - Creating C:\git\github\skeletest\test\functions\get.table.from.file.objects.spec.ts ...
  - Creating C:\git\github\skeletest\test\functions\get.table.of.files.spec.ts ...
  - Creating C:\git\github\skeletest\test\functions\get.timestamp.spec.ts ...
- - Creating C:\git\github\skeletest\test\index.spec.ts ...
- - Creating C:\git\github\skeletest\test\skeleton.spec.ts ...
+ - Creating C:\git\github\skeletest\test\skeletest.spec.ts ...
+ - Creating C:\git\github\skeletest\test\process.spec.ts ...
 Done.
 
 Files I could NOT move:
