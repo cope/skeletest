@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 'use strict';
 
 const getSkeletestFileContent = (useVitest: boolean, fileName: string, testFileExtensionPrefix?: string): string => {

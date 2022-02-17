@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 'use strict';
 
 const getTimestamp = (date: Date = new Date()): string => {
