@@ -3,7 +3,8 @@
 	"filesExtension": "ts",
 	"testFolderName": "test",
 	"testFileExtensionPrefix": "spec",
-	"useTestTodo": false,
+	"considerVueFiles": true,
+	"useVitest": false,
 	"ignoreSrcFiles": [
 		"test/skeletest.spec.ts"
 	],

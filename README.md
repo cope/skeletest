@@ -13,7 +13,8 @@ You can change default configuration via ```.skeletest.json``` file:
 	"testFolderName": "test",               // default: "test"
 	"testFileExtensionPrefix": "spec",      // default detects: "spec" for typescript and "test" for javascript
 
-	"useTestTodo": true,                    // default: false - if true, skeletest uses jests "it.todo"
+	"considerVueFiles": true,               // default: false - if true, skeletest checks for test files matching .vue files
+	"useVitest": true,                      // default: false - if true, skeletest uses vitest describe and it for "it.todo"
 
 	"ignoreSrcFiles": ["file1.ts"...],      // not yet implemented - default: []
 	"ignoreTestFiles": ["file3.spec.ts"...] // not yet implemented - default: []

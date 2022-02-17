@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 'use strict';
 
 import * as fs from 'fs';
@@ -14,6 +13,8 @@ import convertFilesToObjects from './functions/convert.files.to.objects';
 import getTableFromFileObjects from './functions/get.table.from.file.objects';
 import getSkeletestFileContent from './functions/get.skeletest.file.content';
 
+const VUE_FILE_EXTENSION = '.vue';
+
 export default {
 	run(commander: any) {
 		const options: any = _.pick(commander, ['config', 'fix']);
@@ -21,7 +22,7 @@ export default {
 		const root = process.cwd();
 		const config = getConfig(root, options?.config);
 
-		const {srcFolderName, testFolderName, useTestTodo = false} = config;
+		const {srcFolderName, testFolderName, considerVueFiles = false, useVitest = false} = config;
 		let {filesExtension, testFileExtensionPrefix, ignoreSrcFiles = [], ignoreTestFiles = []} = config;
 		filesExtension = fixExtension(filesExtension);
 		testFileExtensionPrefix = fixExtension(testFileExtensionPrefix);
@@ -35,13 +36,27 @@ export default {
 		let srcFiles = getFilesListing(srcFolder, filesExtension);
 		let testFiles = getFilesListing(testFolder, filesExtension);
 
+		if (considerVueFiles) {
+			let vueSrcFiles = getFilesListing(srcFolder, VUE_FILE_EXTENSION);
+			srcFiles = _.merge(srcFiles, vueSrcFiles);
+			srcFiles = _.sortBy(srcFiles);
+		}
+
 		ignoreSrcFiles = _.map(ignoreSrcFiles, (f) => path.join(root, f));
 		ignoreTestFiles = _.map(ignoreTestFiles, (f) => path.join(root, f));
 
 		srcFiles = _.filter(srcFiles, (f) => !_.includes(ignoreSrcFiles, f));
 		testFiles = _.filter(testFiles, (f) => !_.includes(ignoreTestFiles, f));
 
-		const expectedTestFiles = _.map(srcFiles, (file) => file.replace(srcFolder, testFolder).replace(filesExtension, testFileExtensionPrefix + filesExtension));
+		const expectedTestFiles = _.map(srcFiles, (file) => {
+			file = file.replace(srcFolder, testFolder);
+			file = file.replace(filesExtension, testFileExtensionPrefix + filesExtension);
+
+			if (considerVueFiles) {
+				file = file.replace(VUE_FILE_EXTENSION, testFileExtensionPrefix + filesExtension);
+			}
+			return file;
+		});
 		const wrongTestFiles = convertFilesToObjects(_.difference(testFiles, expectedTestFiles));
 		const missingTestFiles = convertFilesToObjects(_.difference(expectedTestFiles, testFiles));
 
@@ -106,7 +121,7 @@ export default {
 					const fullPath = path.join(file.path, file.name);
 					if (!fs.existsSync(fullPath)) {
 						console.log(' - Creating', fullPath, '...');
-						fs.writeFileSync(fullPath, getSkeletestFileContent(useTestTodo, file.name, testFileExtensionPrefix));
+						fs.writeFileSync(fullPath, getSkeletestFileContent(useVitest, file.name, testFileExtensionPrefix));
 					}
 				});
 				console.log('Done.');

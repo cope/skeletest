@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 'use strict';
 
 import * as fs from 'fs';
@@ -22,7 +21,8 @@ const _getDefaultConfig = (root: string) => {
 		testFileExtensionPrefix: 'spec',
 		ignoreSrcFiles: [],
 		ignoreTestFiles: [],
-		useTestTodo: false
+		considerVueFiles: false,
+		useVitest: false
 	};
 
 	try {
