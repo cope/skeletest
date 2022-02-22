@@ -21,6 +21,7 @@ commander
 	.description('Create test skeleton.\nUse .skeletest.json config file to override default settings.')
 	.option('-f, --fix', 'Fix missing test files', false)
 	.option('-c, --config <config>', 'Alternative config file (must be .json)', '.skeletest.json')
+	.option('-v, --verbose', 'Verbose', false)
 	.parse(process.argv);
 
 const options = commander.opts();

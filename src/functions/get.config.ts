@@ -3,7 +3,9 @@
 
 import * as fs from 'fs';
 import path from 'path';
+
 import {cloneDeep, find, set} from 'lodash';
+import fixExtension from './fix.extension';
 
 const _hasJS = (srcFolder: string) => {
 	const files = fs.readdirSync(srcFolder);
@@ -17,9 +19,9 @@ const _hasJS = (srcFolder: string) => {
 const _getDefaultConfig = (root: string) => {
 	const defaultConfig = {
 		srcFolderName: 'src',
-		filesExtension: 'ts',
 		testFolderName: 'test',
-		testFileExtensionPrefix: 'spec',
+		filesExtension: '.ts',
+		testFileExtensionPrefix: '.spec',
 		ignoreSrcFiles: [],
 		ignoreTestFiles: [],
 		considerVueFiles: false,
@@ -27,13 +29,13 @@ const _getDefaultConfig = (root: string) => {
 	};
 
 	try {
-		const config = cloneDeep(defaultConfig);
+		let config = cloneDeep(defaultConfig);
 
 		const srcFolder = path.join(root, 'src');
 		if (fs.lstatSync(srcFolder).isDirectory()) {
 			if (_hasJS(srcFolder)) {
-				set(config, 'filesExtension', 'js');
-				set(config, 'testFileExtensionPrefix', 'test');
+				set(config, 'filesExtension', '.js');
+				set(config, 'testFileExtensionPrefix', '.test');
 			}
 		}
 
@@ -47,10 +49,14 @@ const getConfig = (root: string, configFile: string) => {
 	const defaultConfig = _getDefaultConfig(root);
 	try {
 		const userConfig = require(path.join(root, configFile));
-		return {...defaultConfig, ...userConfig};
+
+		const config = {...defaultConfig, ...userConfig};
+		set(config, 'filesExtension', fixExtension(config.filesExtension));
+		set(config, 'testFileExtensionPrefix', fixExtension(config.testFileExtensionPrefix));
+
+		return config;
 	} catch (error) {
 		return defaultConfig;
 	}
 };
-
 export default getConfig;

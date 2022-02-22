@@ -8,7 +8,6 @@ import * as _ from 'lodash';
 
 import getConfig from './functions/get.config';
 import checkFolder from './functions/check.folder';
-import fixExtension from './functions/fix.extension';
 import getFilesListing from './functions/get.files.listing';
 import convertFilesToObjects from './functions/convert.files.to.objects';
 import getTableFromFileObjects from './functions/get.table.from.file.objects';
@@ -18,15 +17,15 @@ const VUE_FILE_EXTENSION = '.vue';
 
 export default {
 	run(commander: any) {
-		const options: any = _.pick(commander, ['config', 'fix']);
+		const options: any = _.pick(commander, ['config', 'fix', 'verbose']);
+		const {fix = false, verbose = false} = options;
 
 		const root = process.cwd();
 		const config = getConfig(root, options?.config);
+		if (verbose) console.log('Using ', config);
 
 		const {srcFolderName, testFolderName, considerVueFiles = false, useVitest = false} = config;
 		let {filesExtension, testFileExtensionPrefix, ignoreSrcFiles = [], ignoreTestFiles = []} = config;
-		filesExtension = fixExtension(filesExtension);
-		testFileExtensionPrefix = fixExtension(testFileExtensionPrefix);
 
 		const srcFolder = path.join(root, srcFolderName);
 		checkFolder(srcFolder, 'Source');
@@ -43,11 +42,20 @@ export default {
 			srcFiles = _.sortBy(srcFiles);
 		}
 
+		if (verbose) console.log('Source Files: ', srcFiles);
+		if (verbose) console.log('Test Files: ', testFiles);
+
 		ignoreSrcFiles = _.map(ignoreSrcFiles, (f) => path.join(root, f));
 		ignoreTestFiles = _.map(ignoreTestFiles, (f) => path.join(root, f));
 
+		if (verbose) console.log('Ignore Source Files: ', ignoreSrcFiles);
+		if (verbose) console.log('Ignore Test Files: ', ignoreTestFiles);
+
 		srcFiles = _.filter(srcFiles, (f) => !_.includes(ignoreSrcFiles, f));
 		testFiles = _.filter(testFiles, (f) => !_.includes(ignoreTestFiles, f));
+
+		if (verbose) console.log('Adjusted Source Files: ', srcFiles);
+		if (verbose) console.log('Adjusted Test Files: ', testFiles);
 
 		const expectedTestFiles = _.map(srcFiles, (file) => {
 			file = file.replace(srcFolder, testFolder);
@@ -58,6 +66,9 @@ export default {
 			}
 			return file;
 		});
+
+		if (verbose) console.log('Expected Test Files: ', expectedTestFiles);
+
 		const wrongTestFiles = convertFilesToObjects(_.difference(testFiles, expectedTestFiles));
 		const missingTestFiles = convertFilesToObjects(_.difference(expectedTestFiles, testFiles));
 
@@ -81,7 +92,7 @@ export default {
 			console.log(getTableFromFileObjects(missingTestFiles).toString());
 		}
 
-		if (options?.fix) {
+		if (fix) {
 			console.log('\nFix is set to true. Fixing what I can...\n');
 
 			const filesToMove: any[] = [];

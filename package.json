@@ -1,6 +1,6 @@
 {
 	"name": "skeletest",
-	"version": "0.1.8",
+	"version": "0.1.9",
 	"description": "test skeleton creator",
 	"engines": {
 		"node": ">=12.0.0"
@@ -8,6 +8,7 @@
 	"main": "./lib/skeletest.js",
 	"types": "./lib/skeletest.d.ts",
 	"scripts": {
+		"go": "ts-node ./src/skeletest.ts -v",
 		"all": "yarn & tsc & yarn clean & yarn format & yarn build & yarn test & yarn docs",
 		"build": "del /S /Q lib\\* && tsc",
 		"build:watch": "tsc --watch",

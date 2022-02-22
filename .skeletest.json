@@ -1,7 +1,7 @@
 {
 	"srcFolderName": "src",
-	"filesExtension": "ts",
 	"testFolderName": "test",
+	"filesExtension": "ts",
 	"testFileExtensionPrefix": "spec",
 	"considerVueFiles": false,
 	"useVitest": false,
