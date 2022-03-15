@@ -19,8 +19,6 @@ import skeletor from './skeletor';
 const commander: any = new Command();
 const packageJson = require('../package.json');
 
-console.clear();
-
 commander
 	.version(packageJson.version)
 	.description('Create test skeleton.\nUse .skeletest.json config file to override default settings.')

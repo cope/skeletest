@@ -17,6 +17,8 @@ const VUE_FILE_EXTENSION = '.vue';
 
 export default {
 	run(commander: any) {
+		console.clear();
+
 		const options: any = _.pick(commander, ['config', 'fix', 'verbose']);
 		const {fix = false, verbose = false} = options;
 
@@ -80,7 +82,7 @@ export default {
 		if (!_.isEmpty(wrongTestFiles)) {
 			console.log('\nWrong test files:');
 			console.log(getTableFromFileObjects(wrongTestFiles).toString());
-		}
+		} else console.log('\nAll test files match respective source files.');
 
 		if (!_.isEmpty(ignoreSrcFiles)) {
 			console.log('\nIgnoring source files:');
@@ -90,7 +92,7 @@ export default {
 		if (!_.isEmpty(missingTestFiles)) {
 			console.log('\nMissing test files:');
 			console.log(getTableFromFileObjects(missingTestFiles).toString());
-		}
+		} else console.log('\nAll expected test files accounted for.');
 
 		if (fix) {
 			console.log('\nFix is set to true. Fixing what I can...\n');
@@ -144,5 +146,6 @@ export default {
 				console.log(getTableFromFileObjects(filesNotToMove, true).toString());
 			}
 		}
+		console.log('\n');
 	}
 };
