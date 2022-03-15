@@ -22,7 +22,7 @@ export default {
 
 		const root = process.cwd();
 		const config = getConfig(root, options?.config);
-		if (verbose) console.log('Using ', config);
+		if (verbose) console.log('\nUsing ', config);
 
 		const {srcFolderName, testFolderName, considerVueFiles = false, useVitest = false} = config;
 		let {filesExtension, testFileExtensionPrefix, ignoreSrcFiles = [], ignoreTestFiles = []} = config;
@@ -38,24 +38,24 @@ export default {
 
 		if (considerVueFiles) {
 			let vueSrcFiles = getFilesListing(srcFolder, VUE_FILE_EXTENSION);
-			srcFiles = _.merge(srcFiles, vueSrcFiles);
+			srcFiles = _.concat(srcFiles, vueSrcFiles);
 			srcFiles = _.sortBy(srcFiles);
 		}
 
-		if (verbose) console.log('Source Files: ', srcFiles);
-		if (verbose) console.log('Test Files: ', testFiles);
+		if (verbose) console.log('\nSource Files:\n', '-', srcFiles.join('\n - '));
+		if (verbose) console.log('\nTest Files:\n', '-', testFiles.join('\n - '));
 
 		ignoreSrcFiles = _.map(ignoreSrcFiles, (f) => path.join(root, f));
 		ignoreTestFiles = _.map(ignoreTestFiles, (f) => path.join(root, f));
 
-		if (verbose) console.log('Ignore Source Files: ', ignoreSrcFiles);
-		if (verbose) console.log('Ignore Test Files: ', ignoreTestFiles);
+		if (verbose) console.log('\nIgnore Source Files:\n', '-', ignoreSrcFiles.join('\n - '));
+		if (verbose) console.log('\nIgnore Test Files:\n', '-', ignoreTestFiles.join('\n - '));
 
 		srcFiles = _.filter(srcFiles, (f) => !_.includes(ignoreSrcFiles, f));
 		testFiles = _.filter(testFiles, (f) => !_.includes(ignoreTestFiles, f));
 
-		if (verbose) console.log('Adjusted Source Files: ', srcFiles);
-		if (verbose) console.log('Adjusted Test Files: ', testFiles);
+		if (verbose) console.log('\nAdjusted Source Files:\n', '-', srcFiles.join('\n - '));
+		if (verbose) console.log('\nAdjusted Test Files:\n', '-', testFiles.join('\n - '));
 
 		const expectedTestFiles = _.map(srcFiles, (file) => {
 			file = file.replace(srcFolder, testFolder);
@@ -67,7 +67,7 @@ export default {
 			return file;
 		});
 
-		if (verbose) console.log('Expected Test Files: ', expectedTestFiles);
+		if (verbose) console.log('\nExpected Test Files:\n', '-', expectedTestFiles.join('\n - '));
 
 		const wrongTestFiles = convertFilesToObjects(_.difference(testFiles, expectedTestFiles));
 		const missingTestFiles = convertFilesToObjects(_.difference(expectedTestFiles, testFiles));

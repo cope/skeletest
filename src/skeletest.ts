@@ -6,15 +6,20 @@
  *
  * Create test skeleton
  * Usage:
- * -x, --exit             Does nothing
+ * -f, --fix            Fix missing test files
+ * -c, --config         Alternative config file (must be .json)
+ * -v, --verbose        Verbose
  *
- * <no params>            Does something
+ * <no params>          Lists issues
  */
 
 import {Command} from 'commander';
+import skeletor from './skeletor';
 
 const commander: any = new Command();
 const packageJson = require('../package.json');
+
+console.clear();
 
 commander
 	.version(packageJson.version)
@@ -26,7 +31,5 @@ commander
 
 const options = commander.opts();
 if (!options?.help) console.log('\nUse .skeletest.json config file to override default settings.\n');
-
-import skeletor from './skeletor';
 
 skeletor.run(options);
