@@ -5,7 +5,7 @@ const getSkeletestFileContent = (useVitest: boolean, fileName: string, testFileE
 	console.log('getSkeletestFileContent', useVitest, fileName, testFileExtensionPrefix);
 	if (testFileExtensionPrefix) fileName = fileName.replace(testFileExtensionPrefix, '');
 	return useVitest //
-		? `import {describe, it} from 'vitest';\ndescribe('${fileName} tests', () => it.todo('should be implemented'));`
+		? `import {describe, test} from 'vitest';\n\ndescribe('${fileName} tests', () => test.todo('should be implemented'));`
 		: `describe('${fileName} tests', () => it('should be implemented'));`;
 };
 export default getSkeletestFileContent;
