@@ -25,6 +25,7 @@ const _getDefaultConfig = (root: string) => {
 		ignoreSrcFiles: [],
 		ignoreTestFiles: [],
 		considerVueFiles: false,
+		considerCyTestFiles: false,
 		useVitest: false
 	};
 

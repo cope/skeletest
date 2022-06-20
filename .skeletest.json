@@ -4,6 +4,7 @@
 	"filesExtension": "ts",
 	"testFileExtensionPrefix": "spec",
 	"considerVueFiles": false,
+	"considerCyTestFiles": false,
 	"useVitest": false,
 	"ignoreSrcFiles": [
 		"test/skeletest.spec.ts"

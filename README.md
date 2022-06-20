@@ -14,6 +14,7 @@ You can change default configuration via ```.skeletest.json``` file:
 	"testFileExtensionPrefix": "spec",      // default detects: "spec" for typescript and "test" for javascript
 
 	"considerVueFiles": true,               // default: false - if true, skeletest checks for test files matching .vue files
+	"considerCyTestFiles": true,            // default: false - if true, skeletest considers test files with .cy extension
 	"useVitest": true,                      // default: false - if true, skeletest uses vitest describe and it for "it.todo"
 
 	"ignoreSrcFiles": ["file1.ts"...],      // not yet implemented - default: []
