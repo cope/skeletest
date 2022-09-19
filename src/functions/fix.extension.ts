@@ -7,5 +7,4 @@ const fixExtension = (ext: string): string => {
 	if (!startsWith(ext, '.')) ext = '.' + ext;
 	return toLower(ext);
 };
-
 export default fixExtension;
