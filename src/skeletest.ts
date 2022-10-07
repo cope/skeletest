@@ -6,7 +6,7 @@
  *
  * Create test skeleton
  * Usage:
- * -f, --fix            Fix missing test files
+ * -f, --fix            Fix missing test files (default: false)
  * -c, --config         Alternative config file (must be .json)
  * -v, --verbose        Verbose
  *
