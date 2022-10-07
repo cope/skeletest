@@ -1,6 +1,6 @@
 {
 	"name": "skeletest",
-	"version": "0.2.5",
+	"version": "0.2.6",
 	"description": "test skeleton creator",
 	"engines": {
 		"node": ">=12.0.0"
@@ -9,7 +9,7 @@
 	"types": "./lib/skeletest.d.ts",
 	"scripts": {
 		"go": "ts-node ./src/skeletest.ts -v",
-		"all": "yarn & tsc & yarn clean & yarn format & yarn build & yarn test & yarn docs",
+		"all": "pnpm i & tsc & pnpm clean & pnpm format & pnpm build & pnpm test & pnpm docs",
 		"build": "del /S /Q lib\\* && tsc",
 		"build:watch": "tsc --watch",
 		"lint": "tslint -p tsconfig.json",
@@ -19,9 +19,10 @@
 		"imports": "tslint --project tsconfig.json --config tslint-imports.json",
 		"fiximports": "tslint --project tsconfig.json --config tslint-imports.json --fix --project",
 		"format": "prettier --write \"src/**/*.ts\"",
-		"up": "yarn upgrade-interactive",
-		"upgrade": "yarn upgrade --latest",
-		"latest": "yarn upgrade-interactive --latest"
+		"up": "pnpm up -i",
+		"upgrade": "pnpm up",
+		"latest": "pnpm up -i -L",
+		"preinstall": "npx only-allow pnpm"
 	},
 	"preferGlobal": true,
 	"bin": {
