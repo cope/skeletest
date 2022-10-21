@@ -1,6 +1,6 @@
 {
 	"name": "skeletest",
-	"version": "0.2.6",
+	"version": "0.2.7",
 	"description": "test skeleton creator",
 	"engines": {
 		"node": ">=12.0.0"
@@ -21,8 +21,7 @@
 		"format": "prettier --write \"src/**/*.ts\"",
 		"up": "pnpm up -i",
 		"upgrade": "pnpm up",
-		"latest": "pnpm up -i -L",
-		"preinstall": "npx only-allow pnpm"
+		"latest": "pnpm up -i -L"
 	},
 	"preferGlobal": true,
 	"bin": {
