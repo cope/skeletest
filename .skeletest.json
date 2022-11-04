@@ -10,6 +10,7 @@
 		"test/skeletest.spec.ts"
 	],
 	"ignoreTestFiles": [
+		"test/bla/",
 		"test/wrong.ts"
 	]
 }

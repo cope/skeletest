@@ -7,12 +7,13 @@ import * as path from 'path';
 import * as _ from 'lodash';
 
 import getConfig from './functions/get.config';
+import isIgnored from './functions/is.ignored';
 import checkFolder from './functions/check.folder';
+import fixExtension from './functions/fix.extension';
 import getFilesListing from './functions/get.files.listing';
 import convertFilesToObjects from './functions/convert.files.to.objects';
-import getTableFromFileObjects from './functions/get.table.from.file.objects';
 import getSkeletestFileContent from './functions/get.skeletest.file.content';
-import fixExtension from './functions/fix.extension';
+import getTableFromFileObjects from './functions/get.table.from.file.objects';
 
 const VUE_FILE_EXTENSION = '.vue';
 
@@ -54,8 +55,8 @@ export default {
 		if (verbose) console.log('\nIgnore Source Files:\n', '-', ignoreSrcFiles.join('\n - '));
 		if (verbose) console.log('\nIgnore Test Files:\n', '-', ignoreTestFiles.join('\n - '));
 
-		srcFiles = _.filter(srcFiles, (f) => !_.includes(ignoreSrcFiles, f));
-		testFiles = _.filter(testFiles, (f) => !_.includes(ignoreTestFiles, f));
+		srcFiles = _.filter(srcFiles, (f) => !isIgnored(ignoreSrcFiles, f));
+		testFiles = _.filter(testFiles, (f) => !isIgnored(ignoreTestFiles, f));
 
 		if (verbose) console.log('\nAdjusted Source Files:\n', '-', srcFiles.join('\n - '));
 		if (verbose) console.log('\nAdjusted Test Files:\n', '-', testFiles.join('\n - '));
