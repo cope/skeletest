@@ -28,7 +28,7 @@ export default {
 		const config = getConfig(root, options?.config);
 		if (verbose) console.log('\nUsing ', config);
 
-		const {srcFolderName, testFolderName, considerVueFiles = false, considerCyTestFiles = false, useVitest = false} = config;
+		const {srcFolderName, testFolderName, considerVueFiles = false, considerCyTestFiles = false, useVitest = false, includeJsonFiles = false} = config;
 		let {filesExtension, testFileExtensionPrefix, ignoreSrcFiles = [], ignoreTestFiles = []} = config;
 
 		const srcFolder = path.join(root, srcFolderName);
@@ -37,7 +37,10 @@ export default {
 		const testFolder = path.join(root, testFolderName);
 		checkFolder(testFolder, 'Test');
 
-		let srcFiles = getFilesListing(srcFolder, filesExtension);
+		let additionalSourceExtensions = [];
+		if (includeJsonFiles) additionalSourceExtensions.push('json');
+
+		let srcFiles = getFilesListing(srcFolder, filesExtension, additionalSourceExtensions);
 		let testFiles = getFilesListing(testFolder, filesExtension);
 
 		if (considerVueFiles) {
@@ -63,11 +66,8 @@ export default {
 
 		const expectedTestFiles = _.map(srcFiles, (file) => {
 			file = file.replace(srcFolder, testFolder);
-			file = file.replace(filesExtension, testFileExtensionPrefix + filesExtension);
-
-			if (considerVueFiles) {
-				file = file.replace(VUE_FILE_EXTENSION, testFileExtensionPrefix + filesExtension);
-			}
+			const parts = _.initial(_.split(file, '.'));
+			file = `${_.join(parts, '.')}${testFileExtensionPrefix}${filesExtension}`;
 			return file;
 		});
 

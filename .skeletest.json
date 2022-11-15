@@ -6,6 +6,7 @@
 	"considerVueFiles": false,
 	"considerCyTestFiles": false,
 	"useVitest": false,
+	"includeJsonFiles": true,
 	"ignoreSrcFiles": [
 		"test/skeletest.spec.ts"
 	],
