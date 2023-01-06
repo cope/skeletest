@@ -8,7 +8,7 @@
 	"useVitest": false,
 	"includeJsonFiles": true,
 	"ignoreSrcFiles": [
-		"test/skeletest.spec.ts"
+		"skeletest.ts"
 	],
 	"ignoreTestFiles": [
 		"test/bla/",
