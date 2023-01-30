@@ -17,6 +17,7 @@ You can change default configuration via ```.skeletest.json``` file:
 	"considerCyTestFiles": true,            // default: false - if true, skeletest considers test files with .cy extension
 	"useVitest": true,                      // default: false - if true, skeletest uses vitest describe and it for "it.todo"
 	"includeJsonFiles": true,               // default: false - if true, skeletest creates skeleton test files for .json files as well
+	"ignoreMocksFolder": false,             // default: true - if true, skeletest ignores files in all __mocks__ folders
 
 	"ignoreSrcFiles": ["file1.ts"...],      // ignore these source files - default: []
 	"ignoreTestFiles": ["file3.spec.ts"...] // ignore these test files - default: []

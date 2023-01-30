@@ -27,7 +27,8 @@ const _getDefaultConfig = (root: string) => {
 		considerVueFiles: false,
 		considerCyTestFiles: false,
 		useVitest: false,
-		includeJsonFiles: false
+		includeJsonFiles: false,
+		ignoreMocksFolder: true
 	};
 
 	try {

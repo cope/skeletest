@@ -28,7 +28,7 @@ export default {
 		const config = getConfig(root, options?.config);
 		if (verbose) console.log('\nUsing ', config);
 
-		const {srcFolderName, testFolderName, considerVueFiles = false, considerCyTestFiles = false, useVitest = false, includeJsonFiles = false} = config;
+		const {srcFolderName, testFolderName, considerVueFiles = false, considerCyTestFiles = false, useVitest = false, includeJsonFiles = false, ignoreMocksFolder = true} = config;
 		let {filesExtension, testFileExtensionPrefix, ignoreSrcFiles = [], ignoreTestFiles = []} = config;
 
 		const srcFolder = path.join(root, srcFolderName);
@@ -64,12 +64,13 @@ export default {
 		if (verbose) console.log('\nAdjusted Source Files:\n', '-', srcFiles.join('\n - '));
 		if (verbose) console.log('\nAdjusted Test Files:\n', '-', testFiles.join('\n - '));
 
-		const expectedTestFiles = _.map(srcFiles, (file) => {
+		let expectedTestFiles = _.map(srcFiles, (file) => {
 			file = file.replace(srcFolder, testFolder);
 			const parts = _.initial(_.split(file, '.'));
 			file = `${_.join(parts, '.')}${testFileExtensionPrefix}${filesExtension}`;
 			return file;
 		});
+		if (ignoreMocksFolder) expectedTestFiles = _.filter(expectedTestFiles, (file) => !_.includes(file, '__mocks__'));
 
 		if (verbose) console.log('\nExpected Test Files:\n', '-', expectedTestFiles.join('\n - '));
 
