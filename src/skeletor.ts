@@ -122,8 +122,6 @@ export default {
 		} else console.log(clc.green('\n✅  All expected test files accounted for.'));
 
 		if (fix) {
-			console.log(clc.blue('\nFix is set to true. Fixing what I can...\n'));
-
 			const filesToMove: any[] = [];
 			const filesNotToMove: any[] = [];
 			const expectedTestFileObjects = convertFilesToObjects(expectedTestFiles);
@@ -133,8 +131,14 @@ export default {
 				if (_.size(matches) === 1) filesToMove.push(...matches);
 				if (_.size(matches) > 1) filesNotToMove.push(...matches);
 			});
-
 			const missingFolders = _.uniq(_.map(missingTestObjects, 'path'));
+
+			if (_.isEmpty(missingFolders) && _.isEmpty(filesToMove) && _.isEmpty(missingTestObjects) && _.isEmpty(filesNotToMove)) {
+				return console.log(clc.green('\n✅  ' + clc.bold('Skeletest') + ': Everything is awesome!\n'));
+			}
+
+			console.log(clc.blue('\n🔍  Fix is set to true. Fixing what I can...\n'));
+
 			if (!_.isEmpty(missingFolders)) {
 				console.log(clc.blue('\nCreating all missing folders...'));
 				_.each(missingFolders, (path) => {
@@ -175,15 +179,15 @@ export default {
 
 			console.log('\n');
 		} else {
-			if (!_.isEmpty(wrongTestObjects) || !_.isEmpty(missingTestObjects)) {
-				let message = '\n';
-				if (!_.isEmpty(wrongTestObjects)) message += clc.bold('ERROR:') + ' There are wrong test files!\n';
-				if (!_.isEmpty(missingTestObjects)) message += clc.bold('ERROR:') + ' There are missing test files!\n';
-
-				bail(clc.red(message));
-			} else {
-				console.log(clc.green('\n✅  ' + clc.bold('Skeletest') + ': Everything is awesome!\n'));
+			if (_.isEmpty(wrongTestObjects) && _.isEmpty(missingTestObjects)) {
+				return console.log(clc.green('\n✅  ' + clc.bold('Skeletest') + ': Everything is awesome!\n'));
 			}
+
+			let message = '\n';
+			if (!_.isEmpty(wrongTestObjects)) message += clc.bold('ERROR:') + ' There are wrong test files!\n';
+			if (!_.isEmpty(missingTestObjects)) message += clc.bold('ERROR:') + ' There are missing test files!\n';
+
+			bail(clc.red(message));
 		}
 	}
 };
