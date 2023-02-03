@@ -175,8 +175,13 @@ export default {
 
 			console.log('\n');
 		} else {
-			if (!_.isEmpty(wrongTestObjects)) bail(2);
-			if (!_.isEmpty(missingTestObjects)) bail(2);
+			if (!_.isEmpty(wrongTestObjects) || !_.isEmpty(missingTestObjects)) {
+				let message = '\n';
+				if (!_.isEmpty(wrongTestObjects)) message += 'ERROR: There are wrong test files!\n';
+				if (!_.isEmpty(missingTestObjects)) message += 'ERROR: There are missing test files!\n';
+
+				bail(message);
+			}
 		}
 	}
 };
