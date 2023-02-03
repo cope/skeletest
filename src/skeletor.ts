@@ -16,6 +16,8 @@ import convertFilesToObjects from './functions/convert.files.to.objects';
 import getSkeletestFileContent from './functions/get.skeletest.file.content';
 import getTableFromFileObjects from './functions/get.table.from.file.objects';
 
+const clc = require('cli-color');
+
 const VUE_FILE_EXTENSION = '.vue';
 
 export default {
@@ -102,27 +104,27 @@ export default {
 		const missingTestObjects = convertFilesToObjects(missingTestFiles);
 
 		if (!_.isEmpty(ignoreTestFiles)) {
-			console.log('\nIgnoring test files:');
-			console.log(getTableFromFileObjects(convertFilesToObjects(ignoreTestFiles)).toString());
+			console.log(clc.blue('\nIgnoring test files:'));
+			console.log(clc.blue(getTableFromFileObjects(convertFilesToObjects(ignoreTestFiles)).toString()));
 		}
 
 		if (!_.isEmpty(wrongTestObjects)) {
-			console.log('\nWrong test files:');
-			console.log(getTableFromFileObjects(wrongTestObjects).toString());
-		} else console.log('\nAll test files match respective source files.');
+			console.log(clc.red('\nWrong test files:'));
+			console.log(clc.red(getTableFromFileObjects(wrongTestObjects).toString()));
+		} else console.log(clc.green('\nAll test files match respective source files.'));
 
 		if (!_.isEmpty(ignoreSrcFiles)) {
-			console.log('\nIgnoring source files:');
-			console.log(getTableFromFileObjects(convertFilesToObjects(ignoreSrcFiles)).toString());
+			console.log(clc.blue('\nIgnoring source files:'));
+			console.log(clc.blue(getTableFromFileObjects(convertFilesToObjects(ignoreSrcFiles)).toString()));
 		}
 
 		if (!_.isEmpty(missingTestObjects)) {
-			console.log('\nMissing test files:');
-			console.log(getTableFromFileObjects(missingTestObjects).toString());
-		} else console.log('\nAll expected test files accounted for.');
+			console.log(clc.red('\nMissing test files:'));
+			console.log(clc.red(getTableFromFileObjects(missingTestObjects).toString()));
+		} else console.log(clc.green('\nAll expected test files accounted for.'));
 
 		if (fix) {
-			console.log('\nFix is set to true. Fixing what I can...\n');
+			console.log(clc.blue('\nFix is set to true. Fixing what I can...\n'));
 
 			const filesToMove: any[] = [];
 			const filesNotToMove: any[] = [];
@@ -136,41 +138,41 @@ export default {
 
 			const missingFolders = _.uniq(_.map(missingTestObjects, 'path'));
 			if (!_.isEmpty(missingFolders)) {
-				console.log('\nCreating all missing folders...');
+				console.log(clc.blue('\nCreating all missing folders...'));
 				_.each(missingFolders, (path) => {
-					console.log(' - Checking', path, '...');
+					console.log(clc.blue(' - Checking ' + clc.bold(path) + ' ...'));
 					if (!fs.existsSync(path)) fs.mkdirSync(path, {recursive: true});
 				});
-				console.log('Done.');
+				console.log(clc.blue('Done.'));
 			}
 
 			if (!_.isEmpty(filesToMove)) {
-				console.log('\nFiles I can move:');
-				console.log(getTableFromFileObjects(filesToMove, true).toString());
+				console.log(clc.magenta('\nFiles I can move:'));
+				console.log(clc.magenta(getTableFromFileObjects(filesToMove, true).toString()));
 
-				console.log('\nMoving files...');
+				console.log(clc.magenta('\nMoving files...'));
 				_.each(filesToMove, (file) => {
-					console.log(' - Moving', file.name, 'from', file.path, 'to', file.newPath, '...');
+					console.log(clc.magenta(' - Moving ' + clc.bold(file.name) + ' from ' + clc.bold(file.path) + ' to ' + clc.bold(file.newPath) + ' ...'));
 					fs.renameSync(path.join(file.path, file.name), path.join(file.newPath, file.name));
 				});
-				console.log('Done.');
+				console.log(clc.magenta('Done.'));
 			}
 
 			if (!_.isEmpty(missingTestObjects)) {
-				console.log('\nCreating files...');
+				console.log(clc.blue('\nCreating files...'));
 				_.each(missingTestObjects, (file) => {
 					const fullPath = path.join(file.path, file.name);
 					if (!fs.existsSync(fullPath)) {
-						console.log(' - Creating', fullPath, '...');
+						console.log(clc.blue(' - Creating ' + clc.bold(fullPath) + '...'));
 						fs.writeFileSync(fullPath, getSkeletestFileContent(useVitest, file.name, testFileExtensionPrefix));
 					}
 				});
-				console.log('Done.');
+				console.log(clc.blue('Done.'));
 			}
 
 			if (!_.isEmpty(filesNotToMove)) {
-				console.log('\nFiles I could NOT move:');
-				console.log(getTableFromFileObjects(filesNotToMove, true).toString());
+				console.log(clc.red('\nFiles I could NOT move:'));
+				console.log(clc.red(getTableFromFileObjects(filesNotToMove, true).toString()));
 			}
 
 			console.log('\n');
@@ -180,7 +182,7 @@ export default {
 				if (!_.isEmpty(wrongTestObjects)) message += 'ERROR: There are wrong test files!\n';
 				if (!_.isEmpty(missingTestObjects)) message += 'ERROR: There are missing test files!\n';
 
-				bail(message);
+				bail(clc.red(message));
 			}
 		}
 	}
