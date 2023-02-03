@@ -111,7 +111,7 @@ export default {
 		if (!_.isEmpty(wrongTestObjects)) {
 			console.log(clc.red('\nWrong test files:'));
 			console.log(clc.red(getTableFromFileObjects(wrongTestObjects).toString()));
-		} else console.log(clc.green('\n✅ All test files match respective source files.'));
+		} else console.log(clc.green('\n✅  All test files match respective source files.'));
 
 		if (!_.isEmpty(ignoreSrcFiles)) {
 			console.log(clc.blue('\nIgnoring source files:'));
@@ -121,7 +121,7 @@ export default {
 		if (!_.isEmpty(missingTestObjects)) {
 			console.log(clc.red('\nMissing test files:'));
 			console.log(clc.red(getTableFromFileObjects(missingTestObjects).toString()));
-		} else console.log(clc.green('\n✅ All expected test files accounted for.'));
+		} else console.log(clc.green('\n✅  All expected test files accounted for.'));
 
 		if (fix) {
 			console.log(clc.blue('\nFix is set to true. Fixing what I can...\n'));
@@ -179,12 +179,12 @@ export default {
 		} else {
 			if (!_.isEmpty(wrongTestObjects) || !_.isEmpty(missingTestObjects)) {
 				let message = '\n';
-				if (!_.isEmpty(wrongTestObjects)) message += 'ERROR: There are wrong test files!\n';
-				if (!_.isEmpty(missingTestObjects)) message += 'ERROR: There are missing test files!\n';
+				if (!_.isEmpty(wrongTestObjects)) message += clc.bold('ERROR:') + ' There are wrong test files!\n';
+				if (!_.isEmpty(missingTestObjects)) message += clc.bold('ERROR:') + ' There are missing test files!\n';
 
 				bail(clc.red(message));
 			} else {
-				console.log(clc.green('\n✅ Everything is awesome!\n'));
+				console.log(clc.green('\n✅  Everything is awesome!\n'));
 			}
 		}
 	}
