@@ -16,8 +16,6 @@
 import {Command} from 'commander';
 import skeletor from './skeletor';
 
-const clc = require('cli-color');
-
 const commander: any = new Command();
 const packageJson = require('../package.json');
 
@@ -30,6 +28,4 @@ commander
 	.parse(process.argv);
 
 const options = commander.opts();
-if (!options?.help) console.log('NOTE: ' + clc.italic('\nUse .skeletest.json config file to override default Skeletest settings.\n'));
-
 skeletor.run(options);
