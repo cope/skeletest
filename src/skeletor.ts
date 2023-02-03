@@ -22,8 +22,6 @@ const VUE_FILE_EXTENSION = '.vue';
 
 export default {
 	run(commander: any) {
-		console.clear();
-
 		const options: any = _.pick(commander, ['config', 'fix', 'verbose']);
 		const {fix = false, verbose = false} = options;
 
