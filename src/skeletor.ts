@@ -6,6 +6,7 @@ import * as path from 'path';
 
 import * as _ from 'lodash';
 
+import bail from './functions/bail';
 import getConfig from './functions/get.config';
 import isIgnored from './functions/is.ignored';
 import checkFolder from './functions/check.folder';
@@ -171,7 +172,11 @@ export default {
 				console.log('\nFiles I could NOT move:');
 				console.log(getTableFromFileObjects(filesNotToMove, true).toString());
 			}
+
+			console.log('\n');
+		} else {
+			if (!_.isEmpty(wrongTestObjects)) bail(2);
+			if (!_.isEmpty(missingTestObjects)) bail(2);
 		}
-		console.log('\n');
 	}
 };

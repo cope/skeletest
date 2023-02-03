@@ -3,14 +3,16 @@
 
 import * as fs from 'fs';
 
+import bail from './bail';
+
 const checkFolder = (folder: string, name: string): void => {
 	if (!fs.existsSync(folder)) {
 		console.log(`\nERROR: ${name} folder ${folder} does not exist.`);
-		process.exit(1);
+		bail(2);
 	}
 	if (!fs.lstatSync(folder).isDirectory()) {
 		console.log(`\nERROR: ${name} folder ${folder} is not a directory.`);
-		process.exit(1);
+		bail(2);
 	}
 };
 
