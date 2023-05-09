@@ -171,4 +171,8 @@ Files I could NOT move:
 
 For a given file, eg. ```check.folder.ts```, skeletest will generate a ```check.folder.spec.ts``` file, with the following content:
 
-```describe('check.folder.ts tests', () => it('should be implemented'));```
+```
+describe('check.folder.ts tests', () => {
+	it('should be implemented');
+});
+```
