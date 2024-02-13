@@ -1,15 +1,25 @@
 {
 	"name": "skeletest",
-	"version": "0.5.0",
+	"version": "0.5.2",
 	"description": "test skeleton creator",
 	"engines": {
 		"node": ">=12.0.0"
 	},
+	"repository": "https://github.com/cope/skeletest.git",
+	"author": "Predrag Stojadinovic <Predrag@Stojadinovic.net>",
+	"license": "MIT",
+	"preferGlobal": true,
 	"main": "./lib/skeletest.js",
 	"types": "./lib/skeletest.d.ts",
+	"bin": {
+		"skeletest": "./lib/skeletest.js"
+	},
+	"files": [
+		"lib/**/*"
+	],
 	"scripts": {
 		"go": "ts-node ./src/skeletest.ts -v",
-		"all": "pnpm i & tsc & pnpm clean & pnpm format & pnpm build & pnpm test & pnpm docs",
+		"all": "pnpm i & pnpm dedupe & tsc & pnpm clean & pnpm format & pnpm build & pnpm test & pnpm docs",
 		"build": "del /S /Q lib\\* && tsc",
 		"build:watch": "tsc --watch",
 		"lint": "tslint -p tsconfig.json",
@@ -22,16 +32,34 @@
 		"up": "pnpm up -i",
 		"upgrade": "pnpm up",
 		"latest": "pnpm up -i -L",
-		"l": "pnpm i & pnpm latest",
-		"preinstall": "npx only-allow pnpm"
+		"l": "pnpm i & pnpm latest"
 	},
-	"preferGlobal": true,
-	"bin": {
-		"skeletest": "./lib/skeletest.js"
+	"dependencies": {
+		"@types/cli-color": "^2.0.6",
+		"@types/cli-table": "^0.3.4",
+		"cli-color": "^2.0.3",
+		"cli-table": "^0.3.11",
+		"commander": "^12.0.0",
+		"lodash": "^4.17.21"
 	},
-	"files": [
-		"lib/**/*"
-	],
+	"devDependencies": {
+		"@types/chai": "^4.3.11",
+		"@types/lodash": "^4.14.202",
+		"@types/mocha": "^10.0.6",
+		"@types/node": "^20.11.17",
+		"chai": "^4.4.0",
+		"mocha": "^10.3.0",
+		"nyc": "^15.1.0",
+		"prettier": "^3.2.5",
+		"source-map-support": "^0.5.21",
+		"ts-node": "^10.9.2",
+		"tslint": "^6.1.3",
+		"tslint-config-prettier": "^1.18.0",
+		"tslint-etc": "^1.13.10",
+		"tslint-no-unused-expression-chai": "^0.1.4",
+		"typedoc": "^0.25.8",
+		"typescript": "^5.3.3"
+	},
 	"nyc": {
 		"include": [
 			"src/**/*.ts"
@@ -51,35 +79,5 @@
 		],
 		"sourceMap": true,
 		"instrument": true
-	},
-	"repository": "https://github.com/cope/skeletest.git",
-	"author": "Predrag Stojadinovic <Predrag@Stojadinovic.net>",
-	"license": "MIT",
-	"dependencies": {
-		"@types/cli-color": "^2.0.2",
-		"@types/cli-table": "^0.3.1",
-		"cli-color": "^2.0.3",
-		"cli-table": "^0.3.11",
-		"commander": "^11.0.0",
-		"lodash": "^4.17.21"
-	},
-	"devDependencies": {
-		"@types/chai": "^4.3.5",
-		"@types/commander": "^2.12.2",
-		"@types/lodash": "^4.14.195",
-		"@types/mocha": "^10.0.1",
-		"@types/node": "^20.3.1",
-		"chai": "^4.3.7",
-		"mocha": "^10.2.0",
-		"nyc": "^15.1.0",
-		"prettier": "^2.8.8",
-		"source-map-support": "^0.5.21",
-		"ts-node": "^10.9.1",
-		"tslint": "^6.1.3",
-		"tslint-config-prettier": "^1.18.0",
-		"tslint-etc": "^1.13.10",
-		"tslint-no-unused-expression-chai": "^0.1.4",
-		"typedoc": "^0.24.8",
-		"typescript": "^5.1.3"
 	}
 }
