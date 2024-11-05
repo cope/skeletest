@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 const isIgnored = (ignores: string[], file: string): boolean => {
 	if (_.includes(ignores, file)) return true;

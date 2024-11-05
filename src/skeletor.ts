@@ -4,7 +4,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 import bail from './functions/bail';
 import getConfig from './functions/get.config';

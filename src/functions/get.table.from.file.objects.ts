@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-import * as _ from 'lodash';
+import _ from 'lodash';
 import Table from 'cli-table';
 
 const getTableFromFileObjects = (objects: any[], includeNewPath?: boolean): Table => {

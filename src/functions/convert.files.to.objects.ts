@@ -3,7 +3,7 @@
 
 import * as os from 'node:os';
 
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 const convertFilesToObjects = (files: string[]): any[] => {
 	const platform = os.platform();

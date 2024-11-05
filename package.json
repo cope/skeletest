@@ -1,9 +1,9 @@
 {
 	"name": "skeletest",
-	"version": "0.5.2",
+	"version": "0.5.3",
 	"description": "test skeleton creator",
 	"engines": {
-		"node": ">=12.0.0"
+		"node": ">=20.12.1"
 	},
 	"repository": "https://github.com/cope/skeletest.git",
 	"author": "Predrag Stojadinovic <Predrag@Stojadinovic.net>",
@@ -37,28 +37,28 @@
 	"dependencies": {
 		"@types/cli-color": "^2.0.6",
 		"@types/cli-table": "^0.3.4",
-		"cli-color": "^2.0.3",
+		"cli-color": "^2.0.4",
 		"cli-table": "^0.3.11",
-		"commander": "^12.0.0",
+		"commander": "^12.1.0",
 		"lodash": "^4.17.21"
 	},
 	"devDependencies": {
 		"@types/chai": "^4.3.11",
-		"@types/lodash": "^4.14.202",
-		"@types/mocha": "^10.0.6",
-		"@types/node": "^20.11.17",
+		"@types/lodash": "^4.17.13",
+		"@types/mocha": "^10.0.9",
+		"@types/node": "^22.9.0",
 		"chai": "^4.4.0",
-		"mocha": "^10.3.0",
-		"nyc": "^15.1.0",
-		"prettier": "^3.2.5",
+		"mocha": "^10.8.2",
+		"nyc": "^17.1.0",
+		"prettier": "^3.3.3",
 		"source-map-support": "^0.5.21",
 		"ts-node": "^10.9.2",
 		"tslint": "^6.1.3",
 		"tslint-config-prettier": "^1.18.0",
 		"tslint-etc": "^1.13.10",
 		"tslint-no-unused-expression-chai": "^0.1.4",
-		"typedoc": "^0.25.8",
-		"typescript": "^5.3.3"
+		"typedoc": "^0.26.11",
+		"typescript": "^5.6.3"
 	},
 	"nyc": {
 		"include": [
@@ -79,5 +79,17 @@
 		],
 		"sourceMap": true,
 		"instrument": true
+	},
+	"pnpm": {
+		"allowedDeprecatedVersions": {
+			"tslint": "6.1.3"
+		},
+		"updateConfig": {
+			"ignoreDependencies": [
+				"chai",
+				"@types/chai",
+				"tslint"
+			]
+		}
 	}
 }
