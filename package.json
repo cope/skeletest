@@ -1,6 +1,6 @@
 {
 	"name": "skeletest",
-	"version": "0.5.4",
+	"version": "0.5.5",
 	"description": "test skeleton creator",
 	"engines": {
 		"node": ">=20.12.1"
