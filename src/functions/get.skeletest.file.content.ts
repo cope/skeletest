@@ -8,6 +8,6 @@ const getSkeletestFileContent = (useVitest: boolean, fileName: string, testFileE
 	fileName = path.parse(fileName).name;
 	return useVitest //
 		? `import {describe, test} from 'vitest';\n\ndescribe('${fileName} tests', () => {\n\t// TODO: implement tests\n\ttest.todo('should be implemented');\n});\n`
-		: `describe('${fileName} tests', () => {\n\t// TODO: implement tests\n\tit('should be implemented');\n});\n`;
+		: `import {expect} from 'chai';\n\ndescribe('${fileName} tests', () => {\n\texpect(true).to.be.true;\n\t// TODO: implement tests\n\tit('should be implemented');\n});\n`;
 };
 export default getSkeletestFileContent;
