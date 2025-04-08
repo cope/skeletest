@@ -1,4 +1,4 @@
-import {expect} from 'chai';
+'use strict';
 
 describe('convert.files.to.objects tests', () => {
 	// TODO: implement tests

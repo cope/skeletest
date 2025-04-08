@@ -1,4 +1,4 @@
-import {expect} from 'chai';
+'use strict';
 
 describe('skeletest tests', () => {
 	// TODO: implement tests

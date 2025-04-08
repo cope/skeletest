@@ -1,4 +1,4 @@
-import {expect} from 'chai';
+'use strict';
 
 describe('is.ignored tests', () => {
 	// TODO: implement tests

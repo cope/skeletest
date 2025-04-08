@@ -1,4 +1,4 @@
-import {expect} from 'chai';
+'use strict';
 
 describe('bail tests', () => {
 	// TODO: implement tests

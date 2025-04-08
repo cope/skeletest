@@ -167,7 +167,7 @@ export default {
 				_.each(missingTestObjects, (file) => {
 					const fullPath = path.join(file.path, file.name);
 					if (!fs.existsSync(fullPath)) {
-						console.log(clc.blue(' - Skeletest Creating ' + clc.bold(fullPath) + '...'));
+						console.log(clc.blue(' - Skeletest created test file: ' + clc.bold(fullPath) + '...'));
 						fs.writeFileSync(fullPath, getSkeletestFileContent(useVitest, file.name, testFileExtensionPrefix));
 					}
 				});

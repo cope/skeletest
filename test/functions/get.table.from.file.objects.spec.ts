@@ -1,4 +1,4 @@
-import {expect} from 'chai';
+'use strict';
 
 describe('get.table.from.file.objects tests', () => {
 	// TODO: implement tests

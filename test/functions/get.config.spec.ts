@@ -1,4 +1,4 @@
-import {expect} from 'chai';
+'use strict';
 
 describe('get.config tests', () => {
 	// TODO: implement tests
