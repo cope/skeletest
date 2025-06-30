@@ -7,7 +7,7 @@ import _ from 'lodash';
 
 import fixExtension from './fix.extension';
 
-const getFilesListing = (root: string, ext: string, additionalExtensions: string[] = []): any[] => {
+const getFilesListing: Function = (root: string, ext: string, additionalExtensions: string[] = []): any[] => {
 	additionalExtensions = _.map(additionalExtensions, fixExtension);
 	ext = fixExtension(ext);
 

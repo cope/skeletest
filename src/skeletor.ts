@@ -19,6 +19,8 @@ import getTableFromFileObjects from './functions/get.table.from.file.objects';
 const clc = require('cli-color');
 
 const VUE_FILE_EXTENSION = '.vue';
+const TS_FILE_EXTENSION = '.ts';
+const JS_FILE_EXTENSION = '.js';
 
 export default {
 	run(commander: any) {
@@ -47,9 +49,17 @@ export default {
 		let testFiles = getFilesListing(testFolder, filesExtension);
 
 		if (considerVueFiles) {
-			let vueSrcFiles = getFilesListing(srcFolder, VUE_FILE_EXTENSION);
+			let vueSrcFiles: any[] = getFilesListing(srcFolder, VUE_FILE_EXTENSION);
 			srcFiles = _.concat(srcFiles, vueSrcFiles);
-			srcFiles = _.sortBy(srcFiles);
+			srcFiles = _.sortBy(_.uniq(srcFiles));
+
+			let tsSrcFiles: any[] = getFilesListing(srcFolder, TS_FILE_EXTENSION);
+			srcFiles = _.concat(srcFiles, tsSrcFiles);
+			srcFiles = _.sortBy(_.uniq(srcFiles));
+
+			let jsSrcFiles: any[] = getFilesListing(srcFolder, JS_FILE_EXTENSION);
+			srcFiles = _.concat(srcFiles, jsSrcFiles);
+			srcFiles = _.sortBy(_.uniq(srcFiles));
 		}
 
 		if (verbose) console.log('\nSkeletest: Source Files:\n', '-', srcFiles.join('\n - '));
