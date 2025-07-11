@@ -7,16 +7,16 @@ import path from 'path';
 import {cloneDeep, find, set} from 'lodash';
 import fixExtension from './fix.extension';
 
-const _hasJS = (srcFolder: string) => {
+const hasJS = (srcFolder: string) => {
 	const files = fs.readdirSync(srcFolder);
-	const hasJS = find(files, (file) => {
+	const foundJS = find(files, (file) => {
 		const ext = path.extname(file);
 		return ext === '.js';
 	});
-	return !!hasJS;
+	return !!foundJS;
 };
 
-const _getDefaultConfig = (root: string) => {
+const getDefaultConfig = (root: string) => {
 	const defaultConfig = {
 		srcFolderName: 'src',
 		testFolderName: 'test',
@@ -36,7 +36,7 @@ const _getDefaultConfig = (root: string) => {
 
 		const srcFolder = path.join(root, 'src');
 		if (fs.lstatSync(srcFolder).isDirectory()) {
-			if (_hasJS(srcFolder)) {
+			if (hasJS(srcFolder)) {
 				set(config, 'filesExtension', '.js');
 				set(config, 'testFileExtensionPrefix', '.test');
 			}
@@ -49,7 +49,7 @@ const _getDefaultConfig = (root: string) => {
 };
 
 const getConfig = (root: string, configFile: string) => {
-	const defaultConfig = _getDefaultConfig(root);
+	const defaultConfig = getDefaultConfig(root);
 	try {
 		const userConfig = require(path.join(root, configFile));
 
