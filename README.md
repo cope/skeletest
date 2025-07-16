@@ -9,7 +9,7 @@ You can change default configuration via ```.skeletest.json``` file:
 ```
 {
 	"srcFolderName": "src",                 // default: "src"
-	"filesExtension": "ts",                 // default detects: "ts" for typescript and "js" for javascript
+	"filesExtensions": ["ts", "js"],        // default: ["ts", "js"] - array of file extensions to process
 	"testFolderName": "test",               // default: "test"
 	"testFileExtensionPrefix": "spec",      // default detects: "spec" for typescript and "test" for javascript
 

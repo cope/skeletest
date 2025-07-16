@@ -20,7 +20,7 @@ const getDefaultConfig = (root: string) => {
 	const defaultConfig = {
 		srcFolderName: 'src',
 		testFolderName: 'test',
-		filesExtension: '.ts',
+		filesExtensions: ['.ts', '.js'],
 		testFileExtensionPrefix: '.spec',
 		ignoreSrcFiles: [],
 		ignoreTestFiles: [],
@@ -32,18 +32,20 @@ const getDefaultConfig = (root: string) => {
 	};
 
 	try {
-		let config = cloneDeep(defaultConfig);
+		const config = cloneDeep(defaultConfig);
 
 		const srcFolder = path.join(root, 'src');
 		if (fs.lstatSync(srcFolder).isDirectory()) {
 			if (hasJS(srcFolder)) {
-				set(config, 'filesExtension', '.js');
+				// Keep both extensions but prioritize JS if detected
+				set(config, 'filesExtensions', ['.js', '.ts']);
 				set(config, 'testFileExtensionPrefix', '.test');
 			}
 		}
 
 		return config;
 	} catch (error) {
+		console.error('Error in getDefaultConfig:', error);
 		return defaultConfig;
 	}
 };
@@ -54,11 +56,15 @@ const getConfig = (root: string, configFile: string) => {
 		const userConfig = require(path.join(root, configFile));
 
 		const config = {...defaultConfig, ...userConfig};
-		set(config, 'filesExtension', fixExtension(config.filesExtension));
+
+		// Ensure filesExtensions is an array and properly formatted
+		config.filesExtensions = config.filesExtensions.map((ext: string) => fixExtension(ext));
+
 		set(config, 'testFileExtensionPrefix', fixExtension(config.testFileExtensionPrefix));
 
 		return config;
 	} catch (error) {
+		console.error('Error in getConfig:', error);
 		return defaultConfig;
 	}
 };

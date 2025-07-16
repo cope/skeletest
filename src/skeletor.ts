@@ -16,48 +16,57 @@ import convertFilesToObjects from './functions/convert.files.to.objects';
 import getSkeletestFileContent from './functions/get.skeletest.file.content';
 import getTableFromFileObjects from './functions/get.table.from.file.objects';
 
-const clc = require('cli-color');
+const clc: any = require('cli-color');
 
 const VUE_FILE_EXTENSION = '.vue';
 const TS_FILE_EXTENSION = '.ts';
 const JS_FILE_EXTENSION = '.js';
 
 export default {
-	run(commander: any) {
+	run(commander: any): void {
 		console.log(clc.blue.bgGreen.bold('\n*** Skeletest: ***'));
 
 		const options: any = _.pick(commander, ['config', 'fix', 'verbose']);
 		const {fix = false, verbose = false} = options;
 
-		const root = process.cwd();
-		const config = getConfig(root, options?.config);
+		const root: string = process.cwd();
+		const config: any = getConfig(root, options?.config);
 		if (verbose) console.log('\nSkeletest: using ', config);
 
-		const {srcFolderName, testFolderName, considerVueFiles = false, considerCyTestFiles = false, useVitest = false, includeJsonFiles = false, ignoreMocksFolder = true} = config;
-		let {filesExtension, testFileExtensionPrefix, ignoreSrcFiles = [], ignoreTestFiles = []} = config;
+		const {
+			srcFolderName, //
+			testFolderName,
+			considerVueFiles = false,
+			considerCyTestFiles = false,
+			useVitest = false,
+			includeJsonFiles = false,
+			ignoreMocksFolder = true
+		} = config;
+		const {filesExtensions, testFileExtensionPrefix} = config;
+		let {ignoreSrcFiles = [], ignoreTestFiles = []} = config;
 
-		const srcFolder = path.join(root, srcFolderName);
+		const srcFolder: string = path.join(root, srcFolderName);
 		checkFolder(srcFolder, 'Source');
 
-		const testFolder = path.join(root, testFolderName);
+		const testFolder: string = path.join(root, testFolderName);
 		checkFolder(testFolder, 'Test');
 
-		let additionalSourceExtensions = [];
+		const additionalSourceExtensions: any[] = [];
 		if (includeJsonFiles) additionalSourceExtensions.push('json');
 
-		let srcFiles = getFilesListing(srcFolder, filesExtension, additionalSourceExtensions);
-		let testFiles = getFilesListing(testFolder, filesExtension);
+		let srcFiles: any[] = getFilesListing(srcFolder, filesExtensions, additionalSourceExtensions);
+		let testFiles: any[] = getFilesListing(testFolder, filesExtensions);
 
 		if (considerVueFiles) {
-			let vueSrcFiles: any[] = getFilesListing(srcFolder, VUE_FILE_EXTENSION);
+			const vueSrcFiles: any[] = getFilesListing(srcFolder, VUE_FILE_EXTENSION);
 			srcFiles = _.concat(srcFiles, vueSrcFiles);
 			srcFiles = _.sortBy(_.uniq(srcFiles));
 
-			let tsSrcFiles: any[] = getFilesListing(srcFolder, TS_FILE_EXTENSION);
+			const tsSrcFiles: any[] = getFilesListing(srcFolder, TS_FILE_EXTENSION);
 			srcFiles = _.concat(srcFiles, tsSrcFiles);
 			srcFiles = _.sortBy(_.uniq(srcFiles));
 
-			let jsSrcFiles: any[] = getFilesListing(srcFolder, JS_FILE_EXTENSION);
+			const jsSrcFiles: any[] = getFilesListing(srcFolder, JS_FILE_EXTENSION);
 			srcFiles = _.concat(srcFiles, jsSrcFiles);
 			srcFiles = _.sortBy(_.uniq(srcFiles));
 		}
@@ -75,12 +84,13 @@ export default {
 		testFiles = _.filter(testFiles, (f) => !isIgnored(ignoreTestFiles, f));
 
 		if (verbose) console.log('\nSkeletest: Adjusted Source Files:\n', '-', srcFiles.join('\n - '));
-		if (verbose) console.log('\nSkeletest: Adjusted Test Files:\n', '-', testFiles.join('\n - '));
+		if (verbose) console.log('\nSkeletest: Adjusted Test Files:\n', '-', srcFiles.join('\n - '));
 
 		let expectedTestFiles = _.map(srcFiles, (file) => {
 			file = file.replace(srcFolder, testFolder);
 			const parts = _.initial(_.split(file, '.'));
-			file = `${_.join(parts, '.')}${testFileExtensionPrefix}${filesExtension}`;
+			const fileExt = path.extname(file);
+			file = `${_.join(parts, '.')}${testFileExtensionPrefix}${fileExt}`;
 			return file;
 		});
 		if (ignoreMocksFolder) expectedTestFiles = _.filter(expectedTestFiles, (file) => !_.includes(file, '__mocks__'));
@@ -88,16 +98,17 @@ export default {
 		if (verbose) console.log('\nSkeletest: Expected Test Files:\n', '-', expectedTestFiles.join('\n - '));
 
 		let wrongTestFiles = _.difference(testFiles, expectedTestFiles);
-		let missingTestFiles = _.difference(expectedTestFiles, testFiles);
+		const missingTestFiles = _.difference(expectedTestFiles, testFiles);
 
 		if (considerCyTestFiles) {
 			const cyTestFileExtensionPrefix = fixExtension('cy');
 			const expectedCyTestFiles = _.map(srcFiles, (file) => {
 				file = file.replace(srcFolder, testFolder);
-				file = file.replace(filesExtension, cyTestFileExtensionPrefix + filesExtension);
+				const fileExt = path.extname(file);
+				file = file.replace(fileExt, cyTestFileExtensionPrefix + fileExt);
 
 				if (considerVueFiles) {
-					file = file.replace(VUE_FILE_EXTENSION, cyTestFileExtensionPrefix + filesExtension);
+					file = file.replace(VUE_FILE_EXTENSION, cyTestFileExtensionPrefix + fileExt);
 				}
 				return file;
 			});
@@ -105,7 +116,8 @@ export default {
 			wrongTestFiles = _.difference(wrongTestFiles, expectedCyTestFiles);
 
 			_.each(testFiles, (testFile) => {
-				testFile = testFile.replace(cyTestFileExtensionPrefix + filesExtension, testFileExtensionPrefix + filesExtension);
+				const fileExt = path.extname(testFile);
+				testFile = testFile.replace(cyTestFileExtensionPrefix + fileExt, testFileExtensionPrefix + fileExt);
 				_.remove(missingTestFiles, (missingFile) => missingFile === testFile);
 			});
 		}

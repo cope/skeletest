@@ -5,6 +5,5 @@
 	"arrowParens": "always",
 	"useTabs": true,
 	"bracketSpacing": false,
-	"vueIndentScriptAndStyle": true,
-	"jsxBracketSameLine": true
+	"vueIndentScriptAndStyle": true
 }

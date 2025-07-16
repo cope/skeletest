@@ -1,7 +1,7 @@
 {
 	"srcFolderName": "src",
 	"testFolderName": "test",
-	"filesExtension": "ts",
+	"filesExtensions": ["ts", "js"],
 	"testFileExtensionPrefix": "spec",
 	"considerVueFiles": false,
 	"considerCyTestFiles": false,

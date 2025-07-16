@@ -1,6 +1,10 @@
 {
 	"compilerOptions": {
-		"target": "es6",
+		"lib": [
+			"es2015",
+			"dom"
+		],
+		"target": "es2015",
 		"module": "commonjs",
 		"resolveJsonModule": true,
 		"esModuleInterop": true,
@@ -9,12 +13,12 @@
 		"preserveConstEnums": true,
 		"sourceMap": true,
 		"declaration": true,
-		"rootDir": "./src",
 		"outDir": "./lib",
 		"strict": true
 	},
 	"include": [
-		"src/**/*"
+		"src/**/*",
+		"test/**/*"
 	],
 	"exclude": [
 		".idea",
@@ -23,6 +27,6 @@
 		"coverage",
 		"docs",
 		"node_modules",
-		"test"
+		"lib"
 	]
 }
