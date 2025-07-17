@@ -9,14 +9,13 @@ You can change default configuration via ```.skeletest.json``` file:
 ```
 {
 	"srcFolderName": "src",                 // default: "src"
-	"filesExtensions": ["ts", "js"],        // default: ["ts", "js"] - array of file extensions to process
+	"filesExtensions": ["ts", "js", "vue", "json"], // default: ["ts", "js"] - array of file extensions to process
 	"testFolderName": "test",               // default: "test"
 	"testFileExtensionPrefix": "spec",      // default detects: "spec" for typescript and "test" for javascript
+	"testExtension": "js",                  // default: "js" - file extension for all test files
 
-	"considerVueFiles": true,               // default: false - if true, skeletest checks for test files matching .vue files
 	"considerCyTestFiles": true,            // default: false - if true, skeletest considers test files with .cy extension
 	"useVitest": true,                      // default: false - if true, skeletest uses vitest describe and it for "it.todo"
-	"includeJsonFiles": true,               // default: false - if true, skeletest creates skeleton test files for .json files as well
 	"ignoreMocksFolder": false,             // default: true - if true, skeletest ignores files in all __mocks__ folders
 
 	"ignoreSrcFiles": ["file1.ts"...],      // ignore these source files - default: []

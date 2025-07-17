@@ -4,67 +4,48 @@
 import * as fs from 'fs';
 import path from 'path';
 
-import {cloneDeep, find, set} from 'lodash';
+import {set} from 'lodash';
 import fixExtension from './fix.extension';
 
-const hasJS = (srcFolder: string) => {
-	const files = fs.readdirSync(srcFolder);
-	const foundJS = find(files, (file) => {
-		const ext = path.extname(file);
-		return ext === '.js';
-	});
-	return !!foundJS;
-};
-
-const getDefaultConfig = (root: string) => {
-	const defaultConfig = {
+const getDefaultConfig: Function = (): any => {
+	return {
 		srcFolderName: 'src',
 		testFolderName: 'test',
 		filesExtensions: ['.ts', '.js'],
-		testFileExtensionPrefix: '.spec',
+		testFileExtensionPrefix: '.test',
+		testExtension: 'js',
 		ignoreSrcFiles: [],
 		ignoreTestFiles: [],
-		considerVueFiles: false,
 		considerCyTestFiles: false,
 		useVitest: false,
-		includeJsonFiles: false,
 		ignoreMocksFolder: true
 	};
-
-	try {
-		const config = cloneDeep(defaultConfig);
-
-		const srcFolder = path.join(root, 'src');
-		if (fs.lstatSync(srcFolder).isDirectory()) {
-			if (hasJS(srcFolder)) {
-				// Keep both extensions but prioritize JS if detected
-				set(config, 'filesExtensions', ['.js', '.ts']);
-				set(config, 'testFileExtensionPrefix', '.test');
-			}
-		}
-
-		return config;
-	} catch (error) {
-		console.error('Error in getDefaultConfig:', error);
-		return defaultConfig;
-	}
 };
 
 const getConfig = (root: string, configFile: string) => {
-	const defaultConfig = getDefaultConfig(root);
+	const defaultConfig: any = getDefaultConfig();
 	try {
-		const userConfig = require(path.join(root, configFile));
+		const configPath = path.join(root, configFile);
+		const userConfigContent = fs.readFileSync(configPath, 'utf8');
+		const userConfig = JSON.parse(userConfigContent);
 
 		const config = {...defaultConfig, ...userConfig};
 
 		// Ensure filesExtensions is an array and properly formatted
 		config.filesExtensions = config.filesExtensions.map((ext: string) => fixExtension(ext));
 
+		console.log('DEBUG: testExtension before fixExtension:', config.testExtension);
 		set(config, 'testFileExtensionPrefix', fixExtension(config.testFileExtensionPrefix));
+		set(config, 'testExtension', fixExtension(config.testExtension));
+		console.log('DEBUG: testExtension after fixExtension:', config.testExtension);
 
 		return config;
 	} catch (error) {
 		console.error('Error in getConfig:', error);
+		// Apply fixExtension to the default config in case of error
+		defaultConfig.filesExtensions = defaultConfig.filesExtensions.map((ext: string) => fixExtension(ext));
+		set(defaultConfig, 'testFileExtensionPrefix', fixExtension(defaultConfig.testFileExtensionPrefix));
+		set(defaultConfig, 'testExtension', fixExtension(defaultConfig.testExtension));
 		return defaultConfig;
 	}
 };

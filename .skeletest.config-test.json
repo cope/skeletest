@@ -1,8 +1,14 @@
 {
 	"srcFolderName": "src",
+	"filesExtensions": [
+		"js",
+		"ts",
+		"json",
+		"vue"
+	],
 	"testFolderName": "test",
-	"filesExtensions": ["ts", "js", "json"],
-	"testFileExtensionPrefix": "spec",
+	"testFileExtensionPrefix": "test",
+	"testExtension": "js",
 	"considerCyTestFiles": false,
 	"useVitest": false,
 	"ignoreMocksFolder": true,
@@ -13,4 +19,4 @@
 		"test/bla/",
 		"test/wrong.ts"
 	]
-}
+} 
