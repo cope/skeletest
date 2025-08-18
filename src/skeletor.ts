@@ -105,7 +105,7 @@ export default {
 		if (!_.isEmpty(wrongTestObjects)) {
 			console.log(clc.red('\nSkeletest: Wrong test files:'));
 			console.log(clc.red(getTableFromFileObjects(wrongTestObjects).toString()));
-		} else console.log(clc.green('\n✅  Skeletest: All test files match respective source files.'));
+		} else console.log(clc.green('✅  Skeletest: All test files match respective source files.'));
 
 		if (!_.isEmpty(ignoreSrcFiles)) {
 			console.log(clc.blue('\nSkeletest: Ignoring source files:'));
@@ -115,7 +115,7 @@ export default {
 		if (!_.isEmpty(missingTestObjects)) {
 			console.log(clc.red('\nSkeletest: Missing test files:'));
 			console.log(clc.red(getTableFromFileObjects(missingTestObjects).toString()));
-		} else console.log(clc.green('\n✅  Skeletest: All expected test files accounted for.'));
+		} else console.log(clc.green('✅  Skeletest: All expected test files accounted for.'));
 
 		if (fix) {
 			const filesToMove: any[] = [];
@@ -130,7 +130,7 @@ export default {
 			const missingFolders = _.uniq(_.map(missingTestObjects, 'path'));
 
 			if (_.isEmpty(missingFolders) && _.isEmpty(filesToMove) && _.isEmpty(missingTestObjects) && _.isEmpty(filesNotToMove)) {
-				return console.log(clc.green('\n✅  ' + clc.bold('Skeletest') + ': Everything is awesome!\n'));
+				return console.log(clc.green('✅  ' + clc.bold('Skeletest') + ': Everything is awesome!\n'));
 			}
 
 			console.log(clc.blue('\n🔍  Skeletest: Fix is set to true. Fixing what I can...\n'));
@@ -176,7 +176,7 @@ export default {
 			console.log('\n');
 		} else {
 			if (_.isEmpty(wrongTestObjects) && _.isEmpty(missingTestObjects)) {
-				return console.log(clc.green('\n✅  ' + clc.bold('Skeletest') + ': Everything is awesome!\n'));
+				return console.log(clc.green('✅  ' + clc.bold('Skeletest') + ': Everything is awesome!\n'));
 			}
 
 			let message = '\n';

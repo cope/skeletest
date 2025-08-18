@@ -1,6 +1,6 @@
 {
 	"name": "skeletest",
-	"version": "0.7.1",
+	"version": "0.7.2",
 	"description": "test skeleton creator",
 	"engines": {
 		"node": ">=20.12.1"
@@ -45,19 +45,19 @@
 	"devDependencies": {
 		"@types/jest": "^30.0.0",
 		"@types/lodash": "^4.17.20",
-		"@types/node": "^24.0.13",
-		"@typescript-eslint/eslint-plugin": "^8.18.1",
-		"@typescript-eslint/parser": "^8.18.1",
-		"eslint": "^9.18.0",
-		"eslint-config-prettier": "^10.1.5",
+		"@types/node": "^24.3.0",
+		"@typescript-eslint/eslint-plugin": "^8.39.1",
+		"@typescript-eslint/parser": "^8.39.1",
+		"eslint": "^9.33.0",
+		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-jest": "^29.0.1",
-		"eslint-plugin-prettier": "^5.2.1",
-		"jest": "^30.0.4",
+		"eslint-plugin-prettier": "^5.5.4",
+		"jest": "^30.0.5",
 		"prettier": "^3.6.2",
-		"ts-jest": "^29.2.5",
+		"ts-jest": "^29.4.1",
 		"ts-node": "^10.9.2",
-		"typedoc": "^0.28.7",
-		"typescript": "^5.8.3"
+		"typedoc": "^0.28.10",
+		"typescript": "^5.9.2"
 	},
 	"pnpm": {
 		"allowedDeprecatedVersions": {
