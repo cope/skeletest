@@ -36,6 +36,7 @@ describe('get.config tests', () => {
 		expect(result).toHaveProperty('testExtension', '.js');
 		expect(result).toHaveProperty('considerCyTestFiles', false);
 		expect(result).toHaveProperty('useVitest', false);
+		expect(result).toHaveProperty('useJest', false);
 		expect(result).toHaveProperty('ignoreMocksFolder', true);
 		expect(result).toHaveProperty('ignoreSrcFiles');
 		expect(result).toHaveProperty('ignoreTestFiles');
@@ -64,6 +65,7 @@ describe('get.config tests', () => {
 			testFileExtensionPrefix: 'test',
 			testExtension: 'js',
 			useVitest: true,
+			useJest: true,
 			ignoreSrcFiles: ['ignore.ts'],
 			ignoreTestFiles: ['ignore.test.ts']
 		};
@@ -78,6 +80,7 @@ describe('get.config tests', () => {
 		expect(result.testFileExtensionPrefix).toBe('.test');
 		expect(result.testExtension).toBe('.js');
 		expect(result.useVitest).toBe(true);
+		expect(result.useJest).toBe(true);
 		expect(result.ignoreSrcFiles).toEqual(['ignore.ts']);
 		expect(result.ignoreTestFiles).toEqual(['ignore.test.ts']);
 

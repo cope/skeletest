@@ -18,6 +18,7 @@ const getDefaultConfig: Function = (): any => {
 		ignoreTestFiles: [],
 		considerCyTestFiles: false,
 		useVitest: false,
+		useJest: false,
 		ignoreMocksFolder: true
 	};
 };
@@ -34,10 +35,8 @@ const getConfig = (root: string, configFile: string) => {
 		// Ensure filesExtensions is an array and properly formatted
 		config.filesExtensions = config.filesExtensions.map((ext: string) => fixExtension(ext));
 
-		console.log('DEBUG: testExtension before fixExtension:', config.testExtension);
 		set(config, 'testFileExtensionPrefix', fixExtension(config.testFileExtensionPrefix));
 		set(config, 'testExtension', fixExtension(config.testExtension));
-		console.log('DEBUG: testExtension after fixExtension:', config.testExtension);
 
 		return config;
 	} catch (error) {

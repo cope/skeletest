@@ -4,7 +4,7 @@ import getSkeletestFileContent from '../../src/functions/get.skeletest.file.cont
 
 describe('get.skeletest.file.content tests', () => {
 	test('should generate Vitest template', () => {
-		const result = getSkeletestFileContent(true, 'app.js');
+		const result = getSkeletestFileContent({useVitest: true}, 'app.js');
 		const expected = `import {describe, test} from 'vitest';
 
 describe('app tests', () => {
@@ -16,7 +16,7 @@ describe('app tests', () => {
 	});
 
 	test('should generate Chai template', () => {
-		const result = getSkeletestFileContent(false, 'app.js');
+		const result = getSkeletestFileContent({}, 'app.js');
 		const expected = `import {expect} from 'chai';
 
 describe('app tests', () => {
@@ -29,7 +29,7 @@ describe('app tests', () => {
 	});
 
 	test('should handle file with extension', () => {
-		const result = getSkeletestFileContent(true, 'utils.helper.js');
+		const result = getSkeletestFileContent({useVitest: true}, 'utils.helper.js');
 		const expected = `import {describe, test} from 'vitest';
 
 describe('utils.helper tests', () => {
@@ -41,7 +41,7 @@ describe('utils.helper tests', () => {
 	});
 
 	test('should handle file without extension', () => {
-		const result = getSkeletestFileContent(true, 'config');
+		const result = getSkeletestFileContent({useVitest: true}, 'config');
 		const expected = `import {describe, test} from 'vitest';
 
 describe('config tests', () => {
@@ -53,7 +53,7 @@ describe('config tests', () => {
 	});
 
 	test('should remove test file extension prefix', () => {
-		const result = getSkeletestFileContent(true, 'app.spec.js', '.spec');
+		const result = getSkeletestFileContent({useVitest: true, testFileExtensionPrefix: '.spec'}, 'app.spec.js');
 		const expected = `import {describe, test} from 'vitest';
 
 describe('app tests', () => {
@@ -65,7 +65,7 @@ describe('app tests', () => {
 	});
 
 	test('should handle different test file prefixes', () => {
-		const result = getSkeletestFileContent(false, 'utils.test.ts', '.test');
+		const result = getSkeletestFileContent({testFileExtensionPrefix: '.test'}, 'utils.test.ts');
 		const expected = `import {expect} from 'chai';
 
 describe('utils tests', () => {
@@ -78,7 +78,7 @@ describe('utils tests', () => {
 	});
 
 	test('should handle file with path', () => {
-		const result = getSkeletestFileContent(true, 'src/utils/helper.js');
+		const result = getSkeletestFileContent({useVitest: true}, 'src/utils/helper.js');
 		const expected = `import {describe, test} from 'vitest';
 
 describe('helper tests', () => {
@@ -90,7 +90,7 @@ describe('helper tests', () => {
 	});
 
 	test('should handle TypeScript files', () => {
-		const result = getSkeletestFileContent(true, 'components/Button.tsx');
+		const result = getSkeletestFileContent({useVitest: true}, 'components/Button.tsx');
 		const expected = `import {describe, test} from 'vitest';
 
 describe('Button tests', () => {
@@ -102,7 +102,7 @@ describe('Button tests', () => {
 	});
 
 	test('should handle kebab-case file names', () => {
-		const result = getSkeletestFileContent(false, 'file-utils.js');
+		const result = getSkeletestFileContent({}, 'file-utils.js');
 		const expected = `import {expect} from 'chai';
 
 describe('file-utils tests', () => {
@@ -115,7 +115,7 @@ describe('file-utils tests', () => {
 	});
 
 	test('should handle camelCase file names', () => {
-		const result = getSkeletestFileContent(true, 'fileUtils.js');
+		const result = getSkeletestFileContent({useVitest: true}, 'fileUtils.js');
 		const expected = `import {describe, test} from 'vitest';
 
 describe('fileUtils tests', () => {
@@ -127,12 +127,34 @@ describe('fileUtils tests', () => {
 	});
 
 	test('should handle empty filename gracefully', () => {
-		const result = getSkeletestFileContent(true, '');
+		const result = getSkeletestFileContent({useVitest: true}, '');
 		const expected = `import {describe, test} from 'vitest';
 
 describe(' tests', () => {
 	// TODO: implement tests
 	test.todo('should be implemented');
+});
+`;
+		expect(result).toBe(expected);
+	});
+
+	test('should generate Jest template', () => {
+		const result = getSkeletestFileContent({useJest: true}, 'cli.ts');
+		const expected = `'use strict';
+
+describe('cli tests', () => {
+	it.todo('should be implemented');
+});
+`;
+		expect(result).toBe(expected);
+	});
+
+	test('should generate Jest template with testFileExtensionPrefix', () => {
+		const result = getSkeletestFileContent({useJest: true, testFileExtensionPrefix: '.spec'}, 'app.spec.js');
+		const expected = `'use strict';
+
+describe('app tests', () => {
+	it.todo('should be implemented');
 });
 `;
 		expect(result).toBe(expected);

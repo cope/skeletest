@@ -105,14 +105,28 @@ describe('skeletor tests', () => {
 	test('should handle verbose mode', () => {
 		const options = {config: '.skeletest.json', fix: false, verbose: true};
 
-		mockedGetFilesListing.mockReturnValue([]);
+		mockedGetConfig.mockReturnValue({
+			srcFolderName: 'src',
+			testFolderName: 'test',
+			filesExtensions: ['.ts'],
+			testFileExtensionPrefix: '.spec',
+			testExtension: '.ts',
+			ignoreSrcFiles: ['src/ignored.ts'],
+			ignoreTestFiles: ['test/ignored.spec.ts']
+		});
+
+		mockedGetFilesListing.mockReturnValue(['/test/root/src/file1.ts']);
 
 		skeletor.run(options);
 
 		// Check that verbose logging happens (console.log is called with multiple args)
 		expect(consoleLogSpy).toHaveBeenCalledWith('\nSkeletest: using ', expect.any(Object));
-		expect(consoleLogSpy).toHaveBeenCalledWith('\nSkeletest: Source Files:\n', '-', '');
-		expect(consoleLogSpy).toHaveBeenCalledWith('\nSkeletest: Test Files:\n', '-', '');
+		expect(consoleLogSpy).toHaveBeenCalledWith('\nSkeletest: Source Files:\n', '-', '/test/root/src/file1.ts');
+		expect(consoleLogSpy).toHaveBeenCalledWith('\nSkeletest: Test Files:\n', '-', '/test/root/src/file1.ts');
+		expect(consoleLogSpy).toHaveBeenCalledWith('\nSkeletest: Ignore Source Files:\n', '-', '/test/root/src/ignored.ts');
+		expect(consoleLogSpy).toHaveBeenCalledWith('\nSkeletest: Ignore Test Files:\n', '-', '/test/root/test/ignored.spec.ts');
+		expect(consoleLogSpy).toHaveBeenCalledWith('\nSkeletest: Adjusted Source Files:\n', '-', '/test/root/src/file1.ts');
+		expect(consoleLogSpy).toHaveBeenCalledWith('\nSkeletest: Expected Test Files:\n', '-', '/test/root/test/file1.spec.ts');
 	});
 
 	test('should handle Cypress test files when considerCyTestFiles is true', () => {
@@ -209,6 +223,12 @@ describe('skeletor tests', () => {
 
 	test('should create missing folders in fix mode', () => {
 		const options = {config: '.skeletest.json', fix: true, verbose: false};
+		const fs = require('fs');
+
+		// Mock fs.existsSync to return false for the folder (doesn't exist)
+		jest.spyOn(fs, 'existsSync').mockReturnValueOnce(false); // for folder check
+		// Mock fs.mkdirSync
+		const mkdirSyncSpy = jest.spyOn(fs, 'mkdirSync').mockImplementation(() => {});
 
 		mockedGetFilesListing
 			.mockReturnValueOnce(['/test/root/src/file1.ts']) // src files
@@ -223,6 +243,9 @@ describe('skeletor tests', () => {
 
 		expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining('Creating all missing folders'));
 		expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining('Done creating missing folders'));
+		expect(mkdirSyncSpy).toHaveBeenCalledWith('/test/root/test/newfolder', {recursive: true});
+
+		mkdirSyncSpy.mockRestore();
 	});
 
 	test('should display files that could NOT be moved when there are multiple matches', () => {
@@ -259,7 +282,7 @@ describe('skeletor tests', () => {
 		});
 
 		// The key is that src files will generate expected test files that include __mocks__ in the path
-		// which will then be filtered out by line 72
+		// which will then be filtered out by line 73
 		mockedGetFilesListing
 			.mockReturnValueOnce(['/test/root/src/__mocks__/file1.ts']) // src file in __mocks__ folder
 			.mockReturnValueOnce([]); // no test files
@@ -267,7 +290,52 @@ describe('skeletor tests', () => {
 		skeletor.run(options);
 
 		// The expected test file would be /test/root/test/__mocks__/file1.spec.ts
-		// but it gets filtered out by line 72, so no missing test files are reported
+		// but it gets filtered out by line 73, so no missing test files are reported
 		expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining('Everything is awesome!'));
+	});
+
+	test('should report both wrong AND missing test files when both exist', () => {
+		const options = {config: '.skeletest.json', fix: false, verbose: false};
+
+		mockedGetFilesListing
+			.mockReturnValueOnce(['/test/root/src/file1.ts', '/test/root/src/file2.ts']) // src files
+			.mockReturnValueOnce(['/test/root/test/wrongfolder/file1.spec.ts']); // one wrong test file
+
+		// Mock the objects - file1 has wrong location, file2 is missing
+		mockedConvertFilesToObjects
+			.mockReturnValueOnce([{name: 'file1.spec.ts', path: '/test/root/test/wrongfolder', full: '/test/root/test/wrongfolder/file1.spec.ts'}]) // wrongTestFiles
+			.mockReturnValueOnce([{name: 'file2.spec.ts', path: '/test/root/test', full: '/test/root/test/file2.spec.ts'}]); // missingTestFiles
+
+		skeletor.run(options);
+
+		// Should report both errors
+		expect(mockedBail).toHaveBeenCalledWith(expect.stringContaining('There are wrong test files!'));
+		expect(mockedBail).toHaveBeenCalledWith(expect.stringContaining('There are missing test files!'));
+	});
+
+	test('should create file when it does not exist in fix mode', () => {
+		const options = {config: '.skeletest.json', fix: true, verbose: false};
+		const fs = require('fs');
+
+		// Mock fs.existsSync to return false for the file (doesn't exist)
+		jest.spyOn(fs, 'existsSync').mockReturnValue(false); // for both folder and file checks
+		// Mock fs.writeFileSync
+		const writeFileSyncSpy = jest.spyOn(fs, 'writeFileSync').mockImplementation(() => {});
+
+		mockedGetFilesListing
+			.mockReturnValueOnce(['/test/root/src/file1.ts']) // src files
+			.mockReturnValueOnce([]); // no test files
+
+		// Mock missing test files
+		mockedConvertFilesToObjects
+			.mockReturnValueOnce([]) // wrongTestFiles (empty)
+			.mockReturnValueOnce([{name: 'file1.spec.ts', path: '/test/root/test', full: '/test/root/test/file1.spec.ts'}]); // missingTestFiles
+
+		skeletor.run(options);
+
+		expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining('Creating files'));
+		expect(writeFileSyncSpy).toHaveBeenCalled();
+
+		writeFileSyncSpy.mockRestore();
 	});
 });

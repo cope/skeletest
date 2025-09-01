@@ -34,6 +34,7 @@ export default {
 			testFolderName,
 			considerCyTestFiles = false,
 			useVitest = false,
+			useJest = false,
 			ignoreMocksFolder = true
 		} = config;
 		const {filesExtensions, testFileExtensionPrefix, testExtension} = config;
@@ -162,7 +163,7 @@ export default {
 					const fullPath = path.join(file.path, file.name);
 					if (!fs.existsSync(fullPath)) {
 						console.log(clc.blue(' - Skeletest created test file: ' + clc.bold(fullPath) + '...'));
-						fs.writeFileSync(fullPath, getSkeletestFileContent(useVitest, file.name, testFileExtensionPrefix));
+						fs.writeFileSync(fullPath, getSkeletestFileContent({useVitest, useJest, testFileExtensionPrefix}, file.name));
 					}
 				});
 				console.log(clc.blue('Skeletest: Done creating files.'));

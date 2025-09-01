@@ -27,10 +27,8 @@ describe('get.files.listing tests', () => {
 	it('should return sorted results', () => {
 		const result = getFilesListing('./test', '.ts');
 
-		if (result.length > 1) {
-			for (let i = 1; i < result.length; i++) {
-				expect(result[i] >= result[i - 1]).toBe(true);
-			}
+		for (let i = 1; i < result.length; i++) {
+			expect(result[i] >= result[i - 1]).toBe(true);
 		}
 	});
 
