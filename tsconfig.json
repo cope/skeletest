@@ -13,12 +13,13 @@
 		"preserveConstEnums": true,
 		"sourceMap": true,
 		"declaration": true,
+		"rootDir": "./src",
 		"outDir": "./lib",
-		"strict": true
+		"strict": true,
+		"types": ["node"]
 	},
 	"include": [
-		"src/**/*",
-		"test/**/*"
+		"src/**/*"
 	],
 	"exclude": [
 		".idea",

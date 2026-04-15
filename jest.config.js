@@ -8,7 +8,12 @@ module.exports = {
 
 	// TypeScript configuration
 	transform: {
-		'^.+\\.ts$': 'ts-jest'
+		'^.+\\.ts$': [
+			'ts-jest',
+			{
+				tsconfig: '<rootDir>/tsconfig.jest.json'
+			}
+		]
 	},
 
 	// Module file extensions
