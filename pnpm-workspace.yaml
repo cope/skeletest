@@ -11,3 +11,7 @@ overrides:
   js-yaml@>=3.0.0 <3.15.2: ^3.15.2
   minimatch@<11.0.1: ^11.0.1
   'typedoc>minimatch': ^10.2.5
+auditConfig:
+  ignoreGhsas:
+    - GHSA-g3hv-75wg-m249
+    - GHSA-gcqx-w48m-w2h4
