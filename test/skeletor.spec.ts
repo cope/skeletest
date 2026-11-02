@@ -3,7 +3,6 @@
 import * as path from 'path';
 import skeletor from '../src/skeletor';
 
-// Mock all dependencies
 jest.mock('fs');
 jest.mock('path');
 jest.mock('../src/functions/bail');
@@ -16,7 +15,6 @@ jest.mock('../src/functions/convert.files.to.objects');
 jest.mock('../src/functions/get.skeletest.file.content');
 jest.mock('../src/functions/get.table.from.file.objects');
 
-// Import mocked functions
 import bail from '../src/functions/bail';
 import getConfig from '../src/functions/get.config';
 import isIgnored from '../src/functions/is.ignored';
@@ -37,7 +35,6 @@ const mockedConvertFilesToObjects = convertFilesToObjects as any;
 const mockedGetSkeletestFileContent = getSkeletestFileContent as any;
 const mockedGetTableFromFileObjects = getTableFromFileObjects as any;
 
-// Mock console.log
 let consoleLogSpy: jest.SpyInstance;
 
 describe('skeletor tests', () => {
@@ -45,13 +42,10 @@ describe('skeletor tests', () => {
 		jest.clearAllMocks();
 		consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
 
-		// Mock process.cwd()
 		jest.spyOn(process, 'cwd').mockReturnValue('/test/root');
 
-		// Mock path.join
 		(path.join as jest.Mock).mockImplementation((...args) => args.join('/'));
 
-		// Default mocks
 		mockedGetConfig.mockReturnValue({
 			srcFolderName: 'src',
 			testFolderName: 'test',
@@ -88,18 +82,54 @@ describe('skeletor tests', () => {
 		expect(mockedBail).not.toHaveBeenCalled();
 	});
 
+	test('should default fix and verbose to false when options are not provided', () => {
+		skeletor.run({});
+
+		expect(mockedGetConfig).toHaveBeenCalledWith('/test/root', undefined);
+		expect(consoleLogSpy).not.toHaveBeenCalledWith('\nSkeletest: using ', expect.anything());
+		expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining('Everything is awesome!'));
+		expect(consoleLogSpy).not.toHaveBeenCalledWith(expect.stringContaining('Fix is set to true'));
+		expect(mockedBail).not.toHaveBeenCalled();
+	});
+
 	test('should report missing test files when fix is false', () => {
 		const options = {config: '.skeletest.json', fix: false, verbose: false};
 
-		mockedGetFilesListing
-			.mockReturnValueOnce(['/test/root/src/file1.ts']) // src files
-			.mockReturnValueOnce([]); // test files (empty)
+		mockedGetFilesListing.mockReturnValueOnce(['/test/root/src/file1.ts']).mockReturnValueOnce([]);
 		mockedConvertFilesToObjects.mockReturnValue([{name: 'file1.spec.ts', path: '/test/root/test', full: '/test/root/test/file1.spec.ts'}]);
 
 		skeletor.run(options);
 
 		expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining('Missing test files'));
 		expect(mockedBail).toHaveBeenCalledWith(expect.stringContaining('There are missing test files!'));
+	});
+
+	test('should report only missing test files when there are no wrong ones', () => {
+		const options = {config: '.skeletest.json', fix: false, verbose: false};
+
+		mockedGetFilesListing.mockReturnValueOnce(['/test/root/src/file1.ts']).mockReturnValueOnce([]);
+		mockedConvertFilesToObjects.mockReturnValueOnce([]).mockReturnValueOnce([{name: 'file1.spec.ts', path: '/test/root/test', full: '/test/root/test/file1.spec.ts'}]);
+
+		skeletor.run(options);
+
+		const message: string = mockedBail.mock.calls[0][0];
+		expect(message).toContain('There are missing test files!');
+		expect(message).not.toContain('There are wrong test files!');
+	});
+
+	test('should report only wrong test files when none are missing', () => {
+		const options = {config: '.skeletest.json', fix: false, verbose: false};
+
+		mockedGetFilesListing.mockReturnValueOnce(['/test/root/src/file1.ts']).mockReturnValueOnce(['/test/root/test/wrongfolder/file1.spec.ts']);
+		mockedConvertFilesToObjects
+			.mockReturnValueOnce([{name: 'file1.spec.ts', path: '/test/root/test/wrongfolder', full: '/test/root/test/wrongfolder/file1.spec.ts'}])
+			.mockReturnValueOnce([]);
+
+		skeletor.run(options);
+
+		const message: string = mockedBail.mock.calls[0][0];
+		expect(message).toContain('There are wrong test files!');
+		expect(message).not.toContain('There are missing test files!');
 	});
 
 	test('should handle verbose mode', () => {
@@ -119,7 +149,6 @@ describe('skeletor tests', () => {
 
 		skeletor.run(options);
 
-		// Check that verbose logging happens (console.log is called with multiple args)
 		expect(consoleLogSpy).toHaveBeenCalledWith('\nSkeletest: using ', expect.any(Object));
 		expect(consoleLogSpy).toHaveBeenCalledWith('\nSkeletest: Source Files:\n', '-', '/test/root/src/file1.ts');
 		expect(consoleLogSpy).toHaveBeenCalledWith('\nSkeletest: Test Files:\n', '-', '/test/root/src/file1.ts');
@@ -141,9 +170,7 @@ describe('skeletor tests', () => {
 			considerCyTestFiles: true
 		});
 
-		mockedGetFilesListing
-			.mockReturnValueOnce(['/test/root/src/file1.ts']) // src files
-			.mockReturnValueOnce(['/test/root/test/file1.cy.ts']); // test files with cy extension
+		mockedGetFilesListing.mockReturnValueOnce(['/test/root/src/file1.ts']).mockReturnValueOnce(['/test/root/test/file1.cy.ts']);
 
 		skeletor.run(options);
 
@@ -194,9 +221,7 @@ describe('skeletor tests', () => {
 	test('should handle fix mode when everything is already awesome', () => {
 		const options = {config: '.skeletest.json', fix: true, verbose: false};
 
-		mockedGetFilesListing
-			.mockReturnValueOnce(['/test/root/src/file1.ts']) // src files
-			.mockReturnValueOnce(['/test/root/test/file1.spec.ts']); // test files match perfectly
+		mockedGetFilesListing.mockReturnValueOnce(['/test/root/src/file1.ts']).mockReturnValueOnce(['/test/root/test/file1.spec.ts']);
 
 		skeletor.run(options);
 
@@ -206,15 +231,12 @@ describe('skeletor tests', () => {
 	test('should categorize wrong test files in fix mode', () => {
 		const options = {config: '.skeletest.json', fix: true, verbose: false};
 
-		mockedGetFilesListing
-			.mockReturnValueOnce(['/test/root/src/file1.ts']) // src files
-			.mockReturnValueOnce(['/test/root/test/wrongfolder/file1.spec.ts']); // test file in wrong location
+		mockedGetFilesListing.mockReturnValueOnce(['/test/root/src/file1.ts']).mockReturnValueOnce(['/test/root/test/wrongfolder/file1.spec.ts']);
 
-		// Mock the objects in the right order
 		mockedConvertFilesToObjects
-			.mockReturnValueOnce([{name: 'file1.spec.ts', path: '/test/root/test/wrongfolder', full: '/test/root/test/wrongfolder/file1.spec.ts'}]) // wrongTestFiles
-			.mockReturnValueOnce([]) // missingTestFiles (empty)
-			.mockReturnValueOnce([{name: 'file1.spec.ts', path: '/test/root/test', full: '/test/root/test/file1.spec.ts'}]); // expectedTestFiles
+			.mockReturnValueOnce([{name: 'file1.spec.ts', path: '/test/root/test/wrongfolder', full: '/test/root/test/wrongfolder/file1.spec.ts'}])
+			.mockReturnValueOnce([])
+			.mockReturnValueOnce([{name: 'file1.spec.ts', path: '/test/root/test', full: '/test/root/test/file1.spec.ts'}]);
 
 		skeletor.run(options);
 
@@ -225,19 +247,14 @@ describe('skeletor tests', () => {
 		const options = {config: '.skeletest.json', fix: true, verbose: false};
 		const fs = require('fs');
 
-		// Mock fs.existsSync to return false for the folder (doesn't exist)
-		jest.spyOn(fs, 'existsSync').mockReturnValueOnce(false); // for folder check
-		// Mock fs.mkdirSync
+		jest.spyOn(fs, 'existsSync').mockReturnValueOnce(false);
 		const mkdirSyncSpy = jest.spyOn(fs, 'mkdirSync').mockImplementation(() => {});
 
-		mockedGetFilesListing
-			.mockReturnValueOnce(['/test/root/src/file1.ts']) // src files
-			.mockReturnValueOnce([]); // no test files
+		mockedGetFilesListing.mockReturnValueOnce(['/test/root/src/file1.ts']).mockReturnValueOnce([]);
 
-		// Mock missing test files that need folders created
 		mockedConvertFilesToObjects
-			.mockReturnValueOnce([]) // wrongTestFiles (empty)
-			.mockReturnValueOnce([{name: 'file1.spec.ts', path: '/test/root/test/newfolder', full: '/test/root/test/newfolder/file1.spec.ts'}]); // missingTestFiles
+			.mockReturnValueOnce([])
+			.mockReturnValueOnce([{name: 'file1.spec.ts', path: '/test/root/test/newfolder', full: '/test/root/test/newfolder/file1.spec.ts'}]);
 
 		skeletor.run(options);
 
@@ -248,21 +265,41 @@ describe('skeletor tests', () => {
 		mkdirSyncSpy.mockRestore();
 	});
 
+	test('should not create folders or files that already exist in fix mode', () => {
+		const options = {config: '.skeletest.json', fix: true, verbose: false};
+		const fs = require('fs');
+
+		jest.spyOn(fs, 'existsSync').mockReturnValue(true);
+		const mkdirSyncSpy = jest.spyOn(fs, 'mkdirSync').mockImplementation(() => {});
+		const writeFileSyncSpy = jest.spyOn(fs, 'writeFileSync').mockImplementation(() => {});
+
+		mockedGetFilesListing.mockReturnValueOnce(['/test/root/src/file1.ts']).mockReturnValueOnce([]);
+
+		mockedConvertFilesToObjects.mockReturnValueOnce([]).mockReturnValueOnce([{name: 'file1.spec.ts', path: '/test/root/test', full: '/test/root/test/file1.spec.ts'}]);
+
+		skeletor.run(options);
+
+		expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining('Creating all missing folders'));
+		expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining('Creating files'));
+		expect(mkdirSyncSpy).not.toHaveBeenCalled();
+		expect(writeFileSyncSpy).not.toHaveBeenCalled();
+
+		mkdirSyncSpy.mockRestore();
+		writeFileSyncSpy.mockRestore();
+	});
+
 	test('should display files that could NOT be moved when there are multiple matches', () => {
 		const options = {config: '.skeletest.json', fix: true, verbose: false};
 
-		mockedGetFilesListing
-			.mockReturnValueOnce(['/test/root/src/file1.ts']) // src files
-			.mockReturnValueOnce(['/test/root/test/folder1/file1.spec.ts', '/test/root/test/folder2/file1.spec.ts']); // multiple wrong test files with same name
+		mockedGetFilesListing.mockReturnValueOnce(['/test/root/src/file1.ts']).mockReturnValueOnce(['/test/root/test/folder1/file1.spec.ts', '/test/root/test/folder2/file1.spec.ts']);
 
-		// Mock multiple wrong test files with same name (can't be moved automatically)
 		mockedConvertFilesToObjects
 			.mockReturnValueOnce([
 				{name: 'file1.spec.ts', path: '/test/root/test/folder1', full: '/test/root/test/folder1/file1.spec.ts'},
 				{name: 'file1.spec.ts', path: '/test/root/test/folder2', full: '/test/root/test/folder2/file1.spec.ts'}
-			]) // wrongTestFiles (multiple with same name)
-			.mockReturnValueOnce([]) // missingTestFiles (empty)
-			.mockReturnValueOnce([{name: 'file1.spec.ts', path: '/test/root/test', full: '/test/root/test/file1.spec.ts'}]); // expectedTestFiles
+			])
+			.mockReturnValueOnce([])
+			.mockReturnValueOnce([{name: 'file1.spec.ts', path: '/test/root/test', full: '/test/root/test/file1.spec.ts'}]);
 
 		skeletor.run(options);
 
@@ -281,34 +318,44 @@ describe('skeletor tests', () => {
 			ignoreMocksFolder: true
 		});
 
-		// The key is that src files will generate expected test files that include __mocks__ in the path
-		// which will then be filtered out by line 73
-		mockedGetFilesListing
-			.mockReturnValueOnce(['/test/root/src/__mocks__/file1.ts']) // src file in __mocks__ folder
-			.mockReturnValueOnce([]); // no test files
+		mockedGetFilesListing.mockReturnValueOnce(['/test/root/src/__mocks__/file1.ts']).mockReturnValueOnce([]);
 
 		skeletor.run(options);
 
-		// The expected test file would be /test/root/test/__mocks__/file1.spec.ts
-		// but it gets filtered out by line 73, so no missing test files are reported
+		expect(mockedConvertFilesToObjects).not.toHaveBeenCalledWith(['/test/root/test/__mocks__/file1.spec.ts']);
 		expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining('Everything is awesome!'));
+	});
+
+	test('should not ignore mocks folder when ignoreMocksFolder is false', () => {
+		const options = {config: '.skeletest.json', fix: false, verbose: false};
+
+		mockedGetConfig.mockReturnValue({
+			srcFolderName: 'src',
+			testFolderName: 'test',
+			filesExtensions: ['.ts'],
+			testFileExtensionPrefix: '.spec',
+			testExtension: '.ts',
+			ignoreMocksFolder: false
+		});
+
+		mockedGetFilesListing.mockReturnValueOnce(['/test/root/src/__mocks__/file1.ts']).mockReturnValueOnce([]);
+
+		skeletor.run(options);
+
+		expect(mockedConvertFilesToObjects).toHaveBeenCalledWith(['/test/root/test/__mocks__/file1.spec.ts']);
 	});
 
 	test('should report both wrong AND missing test files when both exist', () => {
 		const options = {config: '.skeletest.json', fix: false, verbose: false};
 
-		mockedGetFilesListing
-			.mockReturnValueOnce(['/test/root/src/file1.ts', '/test/root/src/file2.ts']) // src files
-			.mockReturnValueOnce(['/test/root/test/wrongfolder/file1.spec.ts']); // one wrong test file
+		mockedGetFilesListing.mockReturnValueOnce(['/test/root/src/file1.ts', '/test/root/src/file2.ts']).mockReturnValueOnce(['/test/root/test/wrongfolder/file1.spec.ts']);
 
-		// Mock the objects - file1 has wrong location, file2 is missing
 		mockedConvertFilesToObjects
-			.mockReturnValueOnce([{name: 'file1.spec.ts', path: '/test/root/test/wrongfolder', full: '/test/root/test/wrongfolder/file1.spec.ts'}]) // wrongTestFiles
-			.mockReturnValueOnce([{name: 'file2.spec.ts', path: '/test/root/test', full: '/test/root/test/file2.spec.ts'}]); // missingTestFiles
+			.mockReturnValueOnce([{name: 'file1.spec.ts', path: '/test/root/test/wrongfolder', full: '/test/root/test/wrongfolder/file1.spec.ts'}])
+			.mockReturnValueOnce([{name: 'file2.spec.ts', path: '/test/root/test', full: '/test/root/test/file2.spec.ts'}]);
 
 		skeletor.run(options);
 
-		// Should report both errors
 		expect(mockedBail).toHaveBeenCalledWith(expect.stringContaining('There are wrong test files!'));
 		expect(mockedBail).toHaveBeenCalledWith(expect.stringContaining('There are missing test files!'));
 	});
@@ -317,19 +364,12 @@ describe('skeletor tests', () => {
 		const options = {config: '.skeletest.json', fix: true, verbose: false};
 		const fs = require('fs');
 
-		// Mock fs.existsSync to return false for the file (doesn't exist)
-		jest.spyOn(fs, 'existsSync').mockReturnValue(false); // for both folder and file checks
-		// Mock fs.writeFileSync
+		jest.spyOn(fs, 'existsSync').mockReturnValue(false);
 		const writeFileSyncSpy = jest.spyOn(fs, 'writeFileSync').mockImplementation(() => {});
 
-		mockedGetFilesListing
-			.mockReturnValueOnce(['/test/root/src/file1.ts']) // src files
-			.mockReturnValueOnce([]); // no test files
+		mockedGetFilesListing.mockReturnValueOnce(['/test/root/src/file1.ts']).mockReturnValueOnce([]);
 
-		// Mock missing test files
-		mockedConvertFilesToObjects
-			.mockReturnValueOnce([]) // wrongTestFiles (empty)
-			.mockReturnValueOnce([{name: 'file1.spec.ts', path: '/test/root/test', full: '/test/root/test/file1.spec.ts'}]); // missingTestFiles
+		mockedConvertFilesToObjects.mockReturnValueOnce([]).mockReturnValueOnce([{name: 'file1.spec.ts', path: '/test/root/test', full: '/test/root/test/file1.spec.ts'}]);
 
 		skeletor.run(options);
 

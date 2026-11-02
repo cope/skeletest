@@ -1,7 +1,12 @@
 'use strict';
 
-// Mock the skeletor module
 jest.mock('../src/skeletor');
+jest.mock('commander', () => {
+	const command: any = {};
+	['version', 'description', 'option', 'parse'].forEach((method: string) => (command[method] = jest.fn(() => command)));
+	command.opts = jest.fn(() => ({fix: false}));
+	return {Command: jest.fn(() => command)};
+});
 import skeletor from '../src/skeletor';
 
 describe('skeletest tests', () => {
@@ -14,17 +19,9 @@ describe('skeletest tests', () => {
 		const mockRun = jest.fn();
 		skeletor.run = mockRun;
 
-		// Mock process.argv to avoid Commander.js conflicts
-		const originalArgv = process.argv;
-		process.argv = ['node', 'skeletest'];
-
-		// Clear the module cache and re-import
 		delete require.cache[require.resolve('../src/skeletest')];
 		require('../src/skeletest');
 
-		// Restore original argv
-		process.argv = originalArgv;
-
-		expect(mockRun).toHaveBeenCalled();
+		expect(mockRun).toHaveBeenCalledWith({fix: false});
 	});
 });

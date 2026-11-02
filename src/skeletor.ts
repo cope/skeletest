@@ -26,7 +26,7 @@ export default {
 		const {fix = false, verbose = false} = options;
 
 		const root: string = process.cwd();
-		const config: any = getConfig(root, options?.config);
+		const config: any = getConfig(root, options.config);
 		if (verbose) console.log('\nSkeletest: using ', config);
 
 		const {

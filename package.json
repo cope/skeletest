@@ -1,6 +1,6 @@
 {
 	"name": "skeletest",
-	"version": "0.7.5",
+	"version": "0.8.0",
 	"description": "test skeleton creator",
 	"engines": {
 		"node": ">=22.11.0"
@@ -19,12 +19,12 @@
 	],
 	"scripts": {
 		"go": "ts-node ./src/skeletest.ts -v",
-		"all": "pnpm i & pnpm dedupe & pnpm audit --fix & tsc & pnpm lint & pnpm format & pnpm build & pnpm test & pnpm docs",
+		"all": "pnpm i & pnpm dedupe & pnpm audit --fix & tsc & pnpm lint & pnpm format & pnpm build & pnpm test & pnpm run docs",
 		"build": "del /S /Q lib\\* && tsc -p tsconfig.build.json",
 		"build:watch": "tsc -p tsconfig.build.json --watch",
 		"lint": "eslint src/**/*.ts test/**/*.ts",
 		"lint:fix": "eslint src/**/*.ts test/**/*.ts --fix",
-		"docs": "typedoc --readme none --out docs src",
+		"docs": "typedoc --readme none --out docs --entryPointStrategy expand src",
 		"test": "jest --coverage --config jest.config.js",
 		"test:watch": "jest --watch",
 		"test:coverage": "jest --coverage",
@@ -39,24 +39,24 @@
 		"@types/cli-table": "^0.3.4",
 		"cli-color": "^2.0.4",
 		"cli-table": "^0.3.11",
-		"commander": "^14.0.3",
+		"commander": "^15.0.0",
 		"lodash": "^4.18.1"
 	},
 	"devDependencies": {
 		"@types/jest": "^30.0.0",
-		"@types/lodash": "^4.17.24",
-		"@types/node": "^25.6.0",
-		"@typescript-eslint/eslint-plugin": "^8.58.2",
-		"@typescript-eslint/parser": "^8.58.2",
-		"eslint": "^10.2.0",
+		"@types/lodash": "^4.17.27",
+		"@types/node": "^26.6.6",
+		"@typescript-eslint/eslint-plugin": "^8.72.1",
+		"@typescript-eslint/parser": "^8.72.1",
+		"eslint": "^10.14.0",
 		"eslint-config-prettier": "^10.1.8",
-		"eslint-plugin-jest": "^29.15.2",
-		"eslint-plugin-prettier": "^5.5.5",
-		"jest": "^30.3.0",
-		"prettier": "^3.8.3",
-		"ts-jest": "^29.4.9",
+		"eslint-plugin-jest": "^29.17.0",
+		"eslint-plugin-prettier": "^5.5.7",
+		"jest": "^30.5.2",
+		"prettier": "^3.9.10",
+		"ts-jest": "^29.4.15",
 		"ts-node": "^10.9.2",
-		"typedoc": "^0.28.19",
+		"typedoc": "^0.28.20",
 		"typescript": "^6.0.2"
 	},
 	"pnpm": {
@@ -83,5 +83,5 @@
 			"picomatch@<2.3.2": ">=2.3.2"
 		}
 	},
-	"packageManager": "pnpm@10.33.0"
+	"packageManager": "pnpm@12.16.1"
 }

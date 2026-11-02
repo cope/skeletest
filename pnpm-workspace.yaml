@@ -1,0 +1,13 @@
+allowBuilds:
+  '@parcel/watcher': true
+  es5-ext: true
+  unrs-resolver: true
+overrides:
+  '@babel/core@<=7.29.0': ^7.29.6
+  baseline-browser-mapping@>=2.0.0 <2.11.0: ^2.11.0
+  browserslist@<=4.28.6: ^4.28.7
+  glob@>=9.0.0 <=14.0.1: ^14.0.2
+  js-yaml@<3.15.0: ^3.15.0
+  js-yaml@>=3.0.0 <3.15.2: ^3.15.2
+  minimatch@<11.0.1: ^11.0.1
+  'typedoc>minimatch': ^10.2.5
