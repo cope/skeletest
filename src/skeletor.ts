@@ -20,6 +20,12 @@ const clc: any = require('cli-color');
 
 export default {
 	run(commander: any): void {
+		const start: number = performance.now();
+		const awesome = (): void => {
+			console.log(clc.green('✅  ' + clc.bold('Skeletest') + ': Everything is awesome!'));
+			console.log(clc.blackBright('⏱️  Skeletest: finished in ' + ((performance.now() - start) / 1000).toFixed(2) + 's\n'));
+		};
+
 		console.log(clc.blue.bgGreen.bold('\n*** Skeletest: ***'));
 
 		const options: any = _.pick(commander, ['config', 'fix', 'verbose']);
@@ -131,7 +137,7 @@ export default {
 			const missingFolders = _.uniq(_.map(missingTestObjects, 'path'));
 
 			if (_.isEmpty(missingFolders) && _.isEmpty(filesToMove) && _.isEmpty(missingTestObjects) && _.isEmpty(filesNotToMove)) {
-				return console.log(clc.green('✅  ' + clc.bold('Skeletest') + ': Everything is awesome!\n'));
+				return awesome();
 			}
 
 			console.log(clc.blue('\n🔍  Skeletest: Fix is set to true. Fixing what I can...\n'));
@@ -177,7 +183,7 @@ export default {
 			console.log('\n');
 		} else {
 			if (_.isEmpty(wrongTestObjects) && _.isEmpty(missingTestObjects)) {
-				return console.log(clc.green('✅  ' + clc.bold('Skeletest') + ': Everything is awesome!\n'));
+				return awesome();
 			}
 
 			let message = '\n';
